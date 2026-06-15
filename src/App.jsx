@@ -621,7 +621,7 @@ function ContactForm({ t, lang }) {
     entreprise: '',
     secteur: '',
     description: '',
-    company_website: '',
+    confirm_human: '',
   })
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -651,7 +651,7 @@ function ContactForm({ t, lang }) {
     e.preventDefault()
     if (!validate()) return
 
-    if (form.company_website) {
+    if (form.confirm_human) {
       setStatus('success')
       return
     }
@@ -673,7 +673,7 @@ function ContactForm({ t, lang }) {
           entreprise: form.entreprise.trim(),
           secteur: form.secteur,
           description: form.description.trim(),
-          company_website: form.company_website,
+          confirm_human: form.confirm_human,
         }),
       })
 
@@ -796,13 +796,13 @@ function ContactForm({ t, lang }) {
         aria-hidden="true"
       >
         <input
-          id="company_website"
-          name="company_website"
+          id="confirm_human"
+          name="confirm_human"
           type="text"
           tabIndex={-1}
           autoComplete="off"
-          value={form.company_website}
-          onChange={update('company_website')}
+          value={form.confirm_human}
+          onChange={update('confirm_human')}
         />
       </div>
 
@@ -831,16 +831,7 @@ function Contact({ t, lang }) {
           <p className="mt-4 text-[17px] text-white/60 leading-relaxed">
             {t.contact.intro}
           </p>
-          <div className="mt-8">
-            <Button
-              href={BOOKING}
-              target="_blank"
-              rel="noopener noreferrer"
-              showArrow
-            >
-              {t.hero.cta}
-            </Button>
-          </div>
+
         </div>
         <ContactForm t={t} lang={lang} />
       </div>
