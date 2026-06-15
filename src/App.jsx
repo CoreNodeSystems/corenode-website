@@ -107,10 +107,20 @@ const content = {
     footer: {
       tagline: 'Solutions Architect. Automatisation et infrastructure pour PME québécoises.',
       rights: '© 2026 CoreNode Systems. Québec, Canada.',
+      privacy: 'Politique de confidentialité',
     },
     contact: {
       title: 'Parlons de votre projet',
       intro: 'Pas encore prêt à réserver un appel ? Décris-moi ton projet, je te réponds en 24h.',
+      reassuranceTitle: 'À quoi t\u2019attendre',
+      reassurance: [
+        { title: 'Réponse sous 24 h', text: 'Pas de file d\u2019attente, pas de robot. Je lis ta demande et je te reviens.' },
+        { title: '100 % confidentiel', text: 'Tes informations servent à te répondre, point. Jamais partagées, jamais revendues.' },
+        { title: 'Sans engagement', text: 'Un premier échange pour voir si le fit est là. Rien à signer.' },
+      ],
+      directTitle: 'Tu préfères écrire directement ?',
+      emailLabel: 'Courriel',
+      linkedinLabel: 'LinkedIn',
       fields: {
         nom: 'Nom complet',
         email: 'Email',
@@ -128,6 +138,43 @@ const content = {
       retry: 'Réessayer',
       emailInvalid: 'Entre une adresse courriel valide.',
       required: 'Ce champ est requis.',
+      privacyNote: 'En envoyant ce formulaire, tu acceptes que CoreNode Systems utilise ces informations uniquement pour répondre à ta demande. Elles ne sont jamais partagées avec des tiers.',
+      privacyLink: 'Politique de confidentialité',
+    },
+    privacy: {
+      title: 'Politique de confidentialité',
+      updated: 'Dernière mise à jour : juin 2026',
+      close: 'Fermer',
+      sections: [
+        {
+          heading: 'Qui je suis',
+          body: "CoreNode Systems est une entreprise individuelle enregistrée au Québec, exploitée par William Fomete, qui agit comme responsable de la protection des renseignements personnels. Pour toute question liée à cette politique : william@corenodesystems.com.",
+        },
+        {
+          heading: 'Les renseignements que je collecte',
+          body: "Uniquement ce que tu fournis volontairement via le formulaire de contact : nom, adresse courriel, nom de l'entreprise (optionnel), secteur d'activité et description de ton projet. Aucun cookie publicitaire, aucun pixel de suivi, aucune collecte automatique de tes habitudes de navigation n'est utilisé sur ce site.",
+        },
+        {
+          heading: 'Pourquoi je les collecte',
+          body: "Pour répondre à ta demande et évaluer si un mandat est pertinent. C'est tout. Tes renseignements ne servent à aucune autre fin.",
+        },
+        {
+          heading: 'Partage avec des tiers',
+          body: "Je ne vends, ne loue ni ne partage tes renseignements à des fins commerciales. Pour traiter ta demande, ils transitent par mon infrastructure technique (hébergement, service de courriel, outil d'automatisation n8n auto-hébergé), uniquement dans le but de t'acheminer une réponse.",
+        },
+        {
+          heading: 'Conservation',
+          body: "Je conserve tes renseignements le temps nécessaire pour assurer le suivi de ta demande et d'un éventuel mandat. Tu peux demander leur suppression en tout temps.",
+        },
+        {
+          heading: 'Stockage local',
+          body: "Ce site mémorise ta préférence de langue (français ou anglais) directement dans ton navigateur. Cette donnée reste sur ton appareil, ne sert qu'au bon fonctionnement du site et n'est pas utilisée pour te suivre.",
+        },
+        {
+          heading: 'Tes droits',
+          body: "Conformément à la Loi 25 (Québec), tu as le droit d'accéder à tes renseignements, de les faire corriger, de retirer ton consentement et d'en demander la suppression. Pour exercer ces droits, écris-moi à william@corenodesystems.com.",
+        },
+      ],
     },
   },
   en: {
@@ -207,10 +254,20 @@ const content = {
     footer: {
       tagline: 'Solutions Architect. Automation and infrastructure for Quebec SMBs.',
       rights: '© 2026 CoreNode Systems. Quebec, Canada.',
+      privacy: 'Privacy policy',
     },
     contact: {
       title: "Let's talk about your project",
       intro: 'Not ready to book a call yet? Describe your project and I will get back to you within 24 hours.',
+      reassuranceTitle: 'What to expect',
+      reassurance: [
+        { title: 'Reply within 24 h', text: 'No queue, no bot. I read your message and get back to you myself.' },
+        { title: '100% confidential', text: 'Your information is used to reply to you, nothing else. Never shared, never sold.' },
+        { title: 'No commitment', text: 'A first conversation to see if there\u2019s a fit. Nothing to sign.' },
+      ],
+      directTitle: 'Prefer to write directly?',
+      emailLabel: 'Email',
+      linkedinLabel: 'LinkedIn',
       fields: {
         nom: 'Full name',
         email: 'Email',
@@ -228,6 +285,43 @@ const content = {
       retry: 'Try again',
       emailInvalid: 'Enter a valid email address.',
       required: 'This field is required.',
+      privacyNote: 'By sending this form, you agree that CoreNode Systems will use this information solely to respond to your request. It is never shared with third parties.',
+      privacyLink: 'Privacy policy',
+    },
+    privacy: {
+      title: 'Privacy policy',
+      updated: 'Last updated: June 2026',
+      close: 'Close',
+      sections: [
+        {
+          heading: 'Who I am',
+          body: "CoreNode Systems is a sole proprietorship registered in Quebec, operated by William Fomete, who acts as the person responsible for the protection of personal information. For any question about this policy: william@corenodesystems.com.",
+        },
+        {
+          heading: 'What I collect',
+          body: "Only what you voluntarily provide through the contact form: name, email address, company name (optional), industry and a description of your project. No advertising cookies, no tracking pixels, and no automatic collection of your browsing behaviour are used on this site.",
+        },
+        {
+          heading: 'Why I collect it',
+          body: "To respond to your request and assess whether an engagement makes sense. That's it. Your information is not used for any other purpose.",
+        },
+        {
+          heading: 'Sharing with third parties',
+          body: "I do not sell, rent or share your information for commercial purposes. To process your request, it passes through my technical infrastructure (hosting, email service, self-hosted n8n automation tool), solely to deliver a reply to you.",
+        },
+        {
+          heading: 'Retention',
+          body: "I keep your information for as long as needed to follow up on your request and a potential engagement. You can request its deletion at any time.",
+        },
+        {
+          heading: 'Local storage',
+          body: "This site remembers your language preference (French or English) directly in your browser. That data stays on your device, serves only to make the site work, and is not used to track you.",
+        },
+        {
+          heading: 'Your rights',
+          body: "Under Quebec's Law 25, you have the right to access your information, have it corrected, withdraw your consent and request its deletion. To exercise these rights, write to william@corenodesystems.com.",
+        },
+      ],
     },
   },
 }
@@ -359,6 +453,36 @@ function XIcon({ size = 16 }) {
     </svg>
   )
 }
+
+function ClockIcon({ size = 16 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="9" />
+      <polyline points="12 7 12 12 15.5 14" />
+    </svg>
+  )
+}
+
+function LockIcon({ size = 16 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="4" y="11" width="16" height="9" rx="2" />
+      <path d="M8 11V8a4 4 0 0 1 8 0v3" />
+    </svg>
+  )
+}
+
+function HandshakeIcon({ size = 16 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M3 12l4-4 4 3 3-3 4 4" />
+      <path d="M11 11l2 2 3-3" />
+      <path d="M3 12v4l4 3 3-2" />
+    </svg>
+  )
+}
+
+const REASSURANCE_ICONS = [ClockIcon, LockIcon, HandshakeIcon]
 
 function Navbar({ lang, setLang, t }) {
   const [scrolled, setScrolled] = useState(false)
@@ -612,7 +736,7 @@ function About({ t }) {
   )
 }
 
-function ContactForm({ t, lang }) {
+function ContactForm({ t, lang, onOpenPrivacy }) {
   const [status, setStatus] = useState('idle')
   const [errors, setErrors] = useState({})
   const [form, setForm] = useState({
@@ -621,7 +745,7 @@ function ContactForm({ t, lang }) {
     entreprise: '',
     secteur: '',
     description: '',
-    confirm_human: '',
+    company_website: '',
   })
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -651,7 +775,7 @@ function ContactForm({ t, lang }) {
     e.preventDefault()
     if (!validate()) return
 
-    if (form.confirm_human) {
+    if (form.company_website) {
       setStatus('success')
       return
     }
@@ -673,7 +797,7 @@ function ContactForm({ t, lang }) {
           entreprise: form.entreprise.trim(),
           secteur: form.secteur,
           description: form.description.trim(),
-          confirm_human: form.confirm_human,
+          company_website: form.company_website,
         }),
       })
 
@@ -796,31 +920,44 @@ function ContactForm({ t, lang }) {
         aria-hidden="true"
       >
         <input
-          id="confirm_human"
-          name="confirm_human"
+          id="cn_ref_code"
+          name="cn_ref_code"
           type="text"
           tabIndex={-1}
           autoComplete="off"
-          value={form.confirm_human}
-          onChange={update('confirm_human')}
+          value={form.company_website}
+          onChange={update('company_website')}
         />
       </div>
 
-      <Button type="submit" disabled={status === 'loading'} className="w-full sm:w-auto">
-        {status === 'loading' ? (
-          <>
-            <Spinner size={16} />
-            {t.contact.submitting}
-          </>
-        ) : (
-          t.contact.submit
-        )}
-      </Button>
+      <div className="space-y-4">
+        <Button type="submit" disabled={status === 'loading'} className="w-full sm:w-auto">
+          {status === 'loading' ? (
+            <>
+              <Spinner size={16} />
+              {t.contact.submitting}
+            </>
+          ) : (
+            t.contact.submit
+          )}
+        </Button>
+
+        <p className="text-[12px] text-white/40 leading-relaxed">
+          {t.contact.privacyNote}{' '}
+          <button
+            type="button"
+            onClick={onOpenPrivacy}
+            className="text-white/60 hover:text-white underline underline-offset-2 transition-colors"
+          >
+            {t.contact.privacyLink}
+          </button>
+        </p>
+      </div>
     </form>
   )
 }
 
-function Contact({ t, lang }) {
+function Contact({ t, lang, onOpenPrivacy }) {
   return (
     <section id="contact" className="py-24 px-6 lg:px-8 border-t border-white/10">
       <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start">
@@ -832,8 +969,46 @@ function Contact({ t, lang }) {
             {t.contact.intro}
           </p>
 
+          <div className="mt-10 space-y-5">
+            {t.contact.reassurance.map((item, i) => {
+              const Icon = REASSURANCE_ICONS[i] || CheckIcon
+              return (
+                <div key={i} className="flex gap-4">
+                  <div className="w-9 h-9 flex-shrink-0 bg-white/[0.03] border border-white/10 text-white/70 rounded-lg flex items-center justify-center">
+                    <Icon size={16} />
+                  </div>
+                  <div>
+                    <div className="text-[14px] font-medium text-white">{item.title}</div>
+                    <div className="text-[13px] text-white/50 leading-relaxed mt-0.5">{item.text}</div>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+
+          <div className="mt-10 pt-8 border-t border-white/10">
+            <div className="text-[13px] font-medium text-white/70 mb-4">{t.contact.directTitle}</div>
+            <div className="flex flex-wrap gap-3">
+              <a
+                href={MAILTO}
+                className="inline-flex items-center gap-2 px-4 py-2 text-[13px] font-medium text-white border border-white/15 rounded-md hover:bg-white/5 hover:border-white/30 transition-colors"
+              >
+                {t.contact.emailLabel}
+                <ArrowIcon size={12} />
+              </a>
+              <a
+                href={LINKEDIN}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-4 py-2 text-[13px] font-medium text-white border border-white/15 rounded-md hover:bg-white/5 hover:border-white/30 transition-colors"
+              >
+                {t.contact.linkedinLabel}
+                <ArrowIcon size={12} />
+              </a>
+            </div>
+          </div>
         </div>
-        <ContactForm t={t} lang={lang} />
+        <ContactForm t={t} lang={lang} onOpenPrivacy={onOpenPrivacy} />
       </div>
     </section>
   )
@@ -863,7 +1038,7 @@ function FinalCTA({ t }) {
   )
 }
 
-function Footer({ t }) {
+function Footer({ t, onOpenPrivacy }) {
   return (
     <footer className="border-t border-white/10 py-12 px-6 lg:px-8">
       <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
@@ -875,15 +1050,78 @@ function Footer({ t }) {
           <a href={MAILTO} className="text-white/80 hover:text-white block mb-1 transition-colors">
             {EMAIL}
           </a>
-          <p>{t.footer.rights}</p>
+          <p className="mb-1">{t.footer.rights}</p>
+          <button
+            type="button"
+            onClick={onOpenPrivacy}
+            className="text-white/45 hover:text-white underline underline-offset-2 transition-colors"
+          >
+            {t.footer.privacy}
+          </button>
         </div>
       </div>
     </footer>
   )
 }
 
+function PrivacyModal({ t, open, onClose }) {
+  useEffect(() => {
+    if (!open) return
+    const onKey = (e) => {
+      if (e.key === 'Escape') onClose()
+    }
+    document.addEventListener('keydown', onKey)
+    document.body.style.overflow = 'hidden'
+    return () => {
+      document.removeEventListener('keydown', onKey)
+      document.body.style.overflow = ''
+    }
+  }, [open, onClose])
+
+  if (!open) return null
+
+  return (
+    <div
+      className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6"
+      role="dialog"
+      aria-modal="true"
+      aria-label={t.privacy.title}
+    >
+      <div
+        className="absolute inset-0 bg-black/70 backdrop-blur-sm"
+        onClick={onClose}
+      />
+      <div className="relative w-full max-w-2xl max-h-[85vh] overflow-y-auto bg-[#0D0D0F] border border-white/10 rounded-2xl">
+        <div className="sticky top-0 flex items-center justify-between px-6 sm:px-8 py-5 border-b border-white/10 bg-[#0D0D0F]/95 backdrop-blur">
+          <div>
+            <h2 className="text-[18px] font-semibold text-white">{t.privacy.title}</h2>
+            <p className="text-[12px] text-white/40 mt-0.5">{t.privacy.updated}</p>
+          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label={t.privacy.close}
+            className="w-8 h-8 flex-shrink-0 flex items-center justify-center text-white/50 hover:text-white border border-white/10 hover:border-white/30 rounded-md transition-colors"
+          >
+            <XIcon size={15} />
+          </button>
+        </div>
+        <div className="px-6 sm:px-8 py-6 space-y-6">
+          {t.privacy.sections.map((s, i) => (
+            <div key={i}>
+              <h3 className="text-[14px] font-medium text-white mb-1.5">{s.heading}</h3>
+              <p className="text-[13px] text-white/55 leading-relaxed">{s.body}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+}
+
 function App() {
   const [lang, setLang] = useState('fr')
+  const [privacyOpen, setPrivacyOpen] = useState(false)
 
   useEffect(() => {
     const stored = localStorage.getItem('corenode-lang')
@@ -896,13 +1134,14 @@ function App() {
   }, [lang])
 
   const t = content[lang]
+  const openPrivacy = () => setPrivacyOpen(true)
 
   return (
     <div className="min-h-screen bg-[#0A0A0B] text-white antialiased">
       <Navbar lang={lang} setLang={setLang} t={t} />
       <main>
         <Hero t={t} />
-        <Contact t={t} lang={lang} />
+        <Contact t={t} lang={lang} onOpenPrivacy={openPrivacy} />
         <Pains t={t} />
         <Fit t={t} />
         <Method t={t} />
@@ -910,7 +1149,8 @@ function App() {
         <About t={t} />
         <FinalCTA t={t} />
       </main>
-      <Footer t={t} />
+      <Footer t={t} onOpenPrivacy={openPrivacy} />
+      <PrivacyModal t={t} open={privacyOpen} onClose={() => setPrivacyOpen(false)} />
     </div>
   )
 }
