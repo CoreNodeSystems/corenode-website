@@ -3,11 +3,35 @@ import { useState, useEffect } from 'react'
 const EMAIL = 'william@corenodesystems.com'
 const MAILTO = 'mailto:' + EMAIL
 const LINKEDIN = 'https://www.linkedin.com/in/william-fomete'
-const BOOKING = MAILTO
+const BOOKING = 'https://cal.com/corenode-systems/meeting-de-30-min'
+const WEBHOOK_URL = import.meta.env.VITE_N8N_WEBHOOK_URL
+
+const SECTEUR_OPTIONS = {
+  fr: [
+    { value: 'Services terrain (HVAC, plomberie, électricité)', label: 'Services terrain (HVAC, plomberie, électricité)' },
+    { value: 'Construction / Pavage', label: 'Construction / Pavage' },
+    { value: 'PME générale', label: 'PME générale' },
+    { value: 'Cliniques / Santé', label: 'Cliniques / Santé' },
+    { value: 'Ecommerce', label: 'Ecommerce' },
+    { value: 'Autre', label: 'Autre' },
+  ],
+  en: [
+    { value: 'Field services (HVAC, plumbing, electrical)', label: 'Field services (HVAC, plumbing, electrical)' },
+    { value: 'Construction / Paving', label: 'Construction / Paving' },
+    { value: 'General SMB', label: 'General SMB' },
+    { value: 'Clinics / Healthcare', label: 'Clinics / Healthcare' },
+    { value: 'Ecommerce', label: 'Ecommerce' },
+    { value: 'Other', label: 'Other' },
+  ],
+}
+
+const inputClass =
+  'w-full bg-white/[0.02] border border-white/10 rounded-md px-4 py-2.5 text-[14px] text-white placeholder:text-white/30 transition-colors focus:outline-none focus:border-white/30 focus:bg-white/[0.04] disabled:opacity-50 disabled:cursor-not-allowed'
+const labelClass = 'block text-[13px] font-medium text-white/70 mb-1.5'
 
 const content = {
   fr: {
-    nav: { services: 'Services', method: 'Méthode', about: 'À propos', cta: 'Réserver un appel' },
+    nav: { services: 'Services', method: 'Méthode', about: 'À propos', cta: 'Réserver un appel découverte' },
     hero: {
       location: 'Québec, Canada',
       titleA: "Arrêtez d'être le pont humain",
@@ -83,6 +107,27 @@ const content = {
     footer: {
       tagline: 'Solutions Architect. Automatisation et infrastructure pour PME québécoises.',
       rights: '© 2026 CoreNode Systems. Québec, Canada.',
+    },
+    contact: {
+      title: 'Parlons de votre projet',
+      intro: 'Pas encore prêt à réserver un appel ? Décris-moi ton projet, je te réponds en 24h.',
+      fields: {
+        nom: 'Nom complet',
+        email: 'Email',
+        entreprise: 'Entreprise',
+        entrepriseOptional: '(optionnel)',
+        secteur: "Secteur d'activité",
+        description: 'Description du projet',
+        descriptionPlaceholder: 'Décris ton projet, ton secteur, et le plus gros défi opérationnel que tu cherches à régler.',
+        secteurPlaceholder: 'Sélectionne ton secteur',
+      },
+      submit: 'Envoyer ma demande',
+      submitting: 'Envoi en cours…',
+      success: 'Merci ! Je te réponds sous 24h.',
+      error: "Une erreur s'est produite. Réessaie ou écris-moi directement.",
+      retry: 'Réessayer',
+      emailInvalid: 'Entre une adresse courriel valide.',
+      required: 'Ce champ est requis.',
     },
   },
   en: {
@@ -163,6 +208,27 @@ const content = {
       tagline: 'Solutions Architect. Automation and infrastructure for Quebec SMBs.',
       rights: '© 2026 CoreNode Systems. Quebec, Canada.',
     },
+    contact: {
+      title: "Let's talk about your project",
+      intro: 'Not ready to book a call yet? Describe your project and I will get back to you within 24 hours.',
+      fields: {
+        nom: 'Full name',
+        email: 'Email',
+        entreprise: 'Company',
+        entrepriseOptional: '(optional)',
+        secteur: 'Industry',
+        description: 'Project description',
+        descriptionPlaceholder: 'Describe your project, your industry, and the biggest operational challenge you want to solve.',
+        secteurPlaceholder: 'Select your industry',
+      },
+      submit: 'Send my request',
+      submitting: 'Sending…',
+      success: 'Thank you! I will reply within 24 hours.',
+      error: 'Something went wrong. Please try again or email me directly.',
+      retry: 'Try again',
+      emailInvalid: 'Enter a valid email address.',
+      required: 'This field is required.',
+    },
   },
 }
 
@@ -186,6 +252,94 @@ function ArrowIcon({ size = 14 }) {
       <line x1="5" y1="12" x2="19" y2="12" />
       <polyline points="12 5 19 12 12 19" />
     </svg>
+  )
+}
+
+function Button({ href, children, variant = 'primary', size = 'md', showArrow = false, className = '', disabled = false, type, ...props }) {
+  const base = 'inline-flex items-center justify-center transition-colors'
+  const sizes = {
+    sm: 'gap-1.5 px-3.5 py-1.5 text-[13px] font-medium rounded-md',
+    md: 'gap-2 px-5 py-3 text-[14px] font-medium rounded-md',
+    lg: 'gap-2 px-6 py-3.5 text-[14px] font-medium rounded-md',
+  }
+  const variants = {
+    primary: 'text-black bg-white hover:bg-white/90',
+    secondary: 'text-white border border-white/15 hover:bg-white/5 hover:border-white/30',
+  }
+  const classes = `${base} ${sizes[size]} ${variants[variant]} ${disabled ? 'opacity-60 cursor-not-allowed pointer-events-none' : ''} ${className}`
+
+  if (href) {
+    return (
+      <a href={href} className={classes} {...props}>
+        {children}
+        {showArrow && <ArrowIcon size={14} />}
+      </a>
+    )
+  }
+
+  return (
+    <button type={type || 'button'} disabled={disabled} className={classes} {...props}>
+      {children}
+      {showArrow && <ArrowIcon size={14} />}
+    </button>
+  )
+}
+
+function Spinner({ size = 16 }) {
+  return (
+    <svg
+      className="animate-spin"
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden="true"
+    >
+      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" />
+      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
+    </svg>
+  )
+}
+
+function Field({ label, optional, error, htmlFor, children }) {
+  return (
+    <div>
+      <label htmlFor={htmlFor} className={labelClass}>
+        {label}
+        {optional && <span className="text-white/40 font-normal ml-1">{optional}</span>}
+      </label>
+      {children}
+      {error && <p className="mt-1.5 text-[12px] text-red-400">{error}</p>}
+    </div>
+  )
+}
+
+function Input({ error, ...props }) {
+  return (
+    <input
+      className={`${inputClass}${error ? ' border-red-400/50' : ''}`}
+      {...props}
+    />
+  )
+}
+
+function Textarea({ error, ...props }) {
+  return (
+    <textarea
+      className={`${inputClass} min-h-[120px] resize-y${error ? ' border-red-400/50' : ''}`}
+      {...props}
+    />
+  )
+}
+
+function Select({ error, children, ...props }) {
+  return (
+    <select
+      className={`${inputClass} appearance-none cursor-pointer${error ? ' border-red-400/50' : ''}`}
+      {...props}
+    >
+      {children}
+    </select>
   )
 }
 
@@ -238,12 +392,15 @@ function Navbar({ lang, setLang, t }) {
           >
             {lang === 'fr' ? 'EN' : 'FR'}
           </button>
-          <a
+          <Button
             href={BOOKING}
-            className="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-1.5 text-[13px] font-medium text-black bg-white rounded-md hover:bg-white/90 transition-colors"
+            target="_blank"
+            rel="noopener noreferrer"
+            size="sm"
+            className="hidden sm:inline-flex"
           >
             {t.nav.cta}
-          </a>
+          </Button>
         </div>
       </div>
     </nav>
@@ -279,15 +436,24 @@ function Hero({ t }) {
           {t.hero.subtitle}
         </p>
         <div className="mt-10 flex flex-wrap items-center gap-3">
-          <a href={BOOKING} className="inline-flex items-center gap-2 px-5 py-3 text-[14px] font-medium text-black bg-white rounded-md hover:bg-white/90 transition-colors">
+          <Button
+            href={BOOKING}
+            target="_blank"
+            rel="noopener noreferrer"
+            showArrow
+          >
             {t.hero.cta}
-            <ArrowIcon size={14} />
-          </a>
-          <a href="#method" className="inline-flex items-center gap-2 px-5 py-3 text-[14px] font-medium text-white border border-white/15 rounded-md hover:bg-white/5 hover:border-white/30 transition-colors">
+          </Button>
+          <Button href="#method" variant="secondary">
             {t.hero.ctaSecondary}
-          </a>
+          </Button>
         </div>
-        <p className="mt-4 text-[13px] text-white/40">{t.hero.reassurance}</p>
+        <p className="mt-4 text-[13px] text-white/40">
+          {t.hero.reassurance}{' '}
+          <a href="#contact" className="text-white/60 hover:text-white underline underline-offset-2 transition-colors">
+            {t.contact.title} →
+          </a>
+        </p>
       </div>
     </section>
   )
@@ -446,6 +612,242 @@ function About({ t }) {
   )
 }
 
+function ContactForm({ t, lang }) {
+  const [status, setStatus] = useState('idle')
+  const [errors, setErrors] = useState({})
+  const [form, setForm] = useState({
+    nom: '',
+    email: '',
+    entreprise: '',
+    secteur: '',
+    description: '',
+    company_website: '',
+  })
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
+  const update = (field) => (e) => {
+    setForm((prev) => ({ ...prev, [field]: e.target.value }))
+    if (errors[field]) {
+      setErrors((prev) => ({ ...prev, [field]: undefined }))
+    }
+  }
+
+  const validate = () => {
+    const next = {}
+    if (!form.nom.trim()) next.nom = t.contact.required
+    if (!form.email.trim()) {
+      next.email = t.contact.required
+    } else if (!emailRegex.test(form.email.trim())) {
+      next.email = t.contact.emailInvalid
+    }
+    if (!form.secteur) next.secteur = t.contact.required
+    if (!form.description.trim()) next.description = t.contact.required
+    setErrors(next)
+    return Object.keys(next).length === 0
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    if (!validate()) return
+
+    if (form.company_website) {
+      setStatus('success')
+      return
+    }
+
+    if (!WEBHOOK_URL) {
+      setStatus('error')
+      return
+    }
+
+    setStatus('loading')
+
+    try {
+      const res = await fetch(WEBHOOK_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          nom: form.nom.trim(),
+          email: form.email.trim(),
+          entreprise: form.entreprise.trim(),
+          secteur: form.secteur,
+          description: form.description.trim(),
+          company_website: form.company_website,
+        }),
+      })
+
+      if (!res.ok) throw new Error('Request failed')
+      setStatus('success')
+    } catch {
+      setStatus('error')
+    }
+  }
+
+  const handleRetry = () => {
+    setStatus('idle')
+    setErrors({})
+  }
+
+  if (status === 'success') {
+    return (
+      <div className="bg-white/[0.02] border border-white/10 rounded-xl p-8 text-center">
+        <div className="w-10 h-10 mx-auto mb-4 bg-emerald-400/10 text-emerald-400 rounded-full flex items-center justify-center">
+          <CheckIcon size={18} />
+        </div>
+        <p className="text-[16px] font-medium text-white">{t.contact.success}</p>
+      </div>
+    )
+  }
+
+  return (
+    <form onSubmit={handleSubmit} noValidate className="relative bg-white/[0.02] border border-white/10 rounded-xl p-6 sm:p-8 space-y-5">
+      {status === 'error' && (
+        <div className="rounded-md border border-red-400/30 bg-red-400/10 px-4 py-3 text-[13px] text-red-300">
+          <p>{t.contact.error}</p>
+          <button
+            type="button"
+            onClick={handleRetry}
+            className="mt-2 text-[13px] font-medium text-white underline underline-offset-2 hover:text-white/80 transition-colors"
+          >
+            {t.contact.retry}
+          </button>
+        </div>
+      )}
+
+      <Field label={t.contact.fields.nom} htmlFor="nom" error={errors.nom}>
+        <Input
+          id="nom"
+          name="nom"
+          type="text"
+          required
+          value={form.nom}
+          onChange={update('nom')}
+          disabled={status === 'loading'}
+          error={errors.nom}
+        />
+      </Field>
+
+      <Field label={t.contact.fields.email} htmlFor="email" error={errors.email}>
+        <Input
+          id="email"
+          name="email"
+          type="email"
+          required
+          value={form.email}
+          onChange={update('email')}
+          disabled={status === 'loading'}
+          error={errors.email}
+        />
+      </Field>
+
+      <Field
+        label={t.contact.fields.entreprise}
+        optional={t.contact.fields.entrepriseOptional}
+        htmlFor="entreprise"
+      >
+        <Input
+          id="entreprise"
+          name="entreprise"
+          type="text"
+          value={form.entreprise}
+          onChange={update('entreprise')}
+          disabled={status === 'loading'}
+        />
+      </Field>
+
+      <Field label={t.contact.fields.secteur} htmlFor="secteur" error={errors.secteur}>
+        <Select
+          id="secteur"
+          name="secteur"
+          required
+          value={form.secteur}
+          onChange={update('secteur')}
+          disabled={status === 'loading'}
+          error={errors.secteur}
+        >
+          <option value="" disabled className="bg-[#0A0A0B] text-white/50">
+            {t.contact.fields.secteurPlaceholder}
+          </option>
+          {SECTEUR_OPTIONS[lang].map((opt) => (
+            <option key={opt.value} value={opt.value} className="bg-[#0A0A0B]">
+              {opt.label}
+            </option>
+          ))}
+        </Select>
+      </Field>
+
+      <Field label={t.contact.fields.description} htmlFor="description" error={errors.description}>
+        <Textarea
+          id="description"
+          name="description"
+          required
+          rows={5}
+          placeholder={t.contact.fields.descriptionPlaceholder}
+          value={form.description}
+          onChange={update('description')}
+          disabled={status === 'loading'}
+          error={errors.description}
+        />
+      </Field>
+
+      <div
+        className="absolute -left-[9999px] w-px h-px overflow-hidden"
+        aria-hidden="true"
+      >
+        <input
+          id="company_website"
+          name="company_website"
+          type="text"
+          tabIndex={-1}
+          autoComplete="off"
+          value={form.company_website}
+          onChange={update('company_website')}
+        />
+      </div>
+
+      <Button type="submit" disabled={status === 'loading'} className="w-full sm:w-auto">
+        {status === 'loading' ? (
+          <>
+            <Spinner size={16} />
+            {t.contact.submitting}
+          </>
+        ) : (
+          t.contact.submit
+        )}
+      </Button>
+    </form>
+  )
+}
+
+function Contact({ t, lang }) {
+  return (
+    <section id="contact" className="py-24 px-6 lg:px-8 border-t border-white/10">
+      <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start">
+        <div>
+          <h2 className="text-3xl sm:text-4xl font-semibold text-white tracking-tight">
+            {t.contact.title}
+          </h2>
+          <p className="mt-4 text-[17px] text-white/60 leading-relaxed">
+            {t.contact.intro}
+          </p>
+          <div className="mt-8">
+            <Button
+              href={BOOKING}
+              target="_blank"
+              rel="noopener noreferrer"
+              showArrow
+            >
+              {t.hero.cta}
+            </Button>
+          </div>
+        </div>
+        <ContactForm t={t} lang={lang} />
+      </div>
+    </section>
+  )
+}
+
 function FinalCTA({ t }) {
   return (
     <section className="py-32 px-6 lg:px-8 border-t border-white/10 relative overflow-hidden">
@@ -455,10 +857,16 @@ function FinalCTA({ t }) {
           {t.finalCta.title}
         </h2>
         <p className="mt-6 text-[17px] text-white/60">{t.finalCta.subtitle}</p>
-        <a href={BOOKING} className="mt-10 inline-flex items-center gap-2 px-6 py-3.5 text-[14px] font-medium text-black bg-white rounded-md hover:bg-white/90 transition-colors">
+        <Button
+          href={BOOKING}
+          target="_blank"
+          rel="noopener noreferrer"
+          size="lg"
+          showArrow
+          className="mt-10"
+        >
           {t.finalCta.cta}
-          <ArrowIcon size={14} />
-        </a>
+        </Button>
       </div>
     </section>
   )
@@ -503,6 +911,7 @@ function App() {
       <Navbar lang={lang} setLang={setLang} t={t} />
       <main>
         <Hero t={t} />
+        <Contact t={t} lang={lang} />
         <Pains t={t} />
         <Fit t={t} />
         <Method t={t} />
