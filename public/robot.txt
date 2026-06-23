@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://corenodesystems.com/sitemap.xml
