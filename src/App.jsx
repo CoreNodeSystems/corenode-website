@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { SpeedInsights } from '@vercel/speed-insights/react'
 
 const EMAIL = 'william@corenodesystems.com'
 const MAILTO = 'mailto:' + EMAIL
@@ -1151,6 +1152,7 @@ function App() {
       </main>
       <Footer t={t} onOpenPrivacy={openPrivacy} />
       <PrivacyModal t={t} open={privacyOpen} onClose={() => setPrivacyOpen(false)} />
+      <SpeedInsights />
     </div>
   )
 }
