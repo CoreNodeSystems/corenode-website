@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react'
+import { BrowserRouter, Routes, Route, Link } from 'react-router-dom'
+import AuditPage from './AuditPage.jsx'
 
 const EMAIL = 'william@corenodesystems.com'
 const MAILTO = 'mailto:' + EMAIL
@@ -26,7 +28,7 @@ const SECTEUR_OPTIONS = {
 }
 
 const inputClass =
-  'w-full bg-white/[0.02] border border-white/10 rounded-md px-4 py-2.5 text-[14px] text-white placeholder:text-white/30 transition-colors focus:outline-none focus:border-white/30 focus:bg-white/[0.04] disabled:opacity-50 disabled:cursor-not-allowed'
+  'w-full bg-white/[0.03] border border-white/10 rounded-md px-4 py-2.5 text-[14px] text-white placeholder:text-white/30 transition-colors focus:outline-none focus:border-white/30 focus:bg-white/[0.04] disabled:opacity-50 disabled:cursor-not-allowed'
 const labelClass = 'block text-[13px] font-medium text-white/70 mb-1.5'
 
 const content = {
@@ -34,42 +36,47 @@ const content = {
     nav: { services: 'Services', method: 'Méthode', about: 'À propos', cta: 'Réserver un appel découverte' },
     hero: {
       location: 'Québec, Canada',
-      titleA: "Arrêtez d'être le pont humain",
-      titleB: 'entre vos propres logiciels.',
-      subtitle: "Je construis l'infrastructure qui connecte vos outils, automatise vos suivis et libère votre équipe du travail manuel répétitif. Des systèmes documentés que vous pouvez opérer sans moi.",
+      titleA: "Arrête d'être le pont humain",
+      titleB: 'entre tes propres logiciels.',
+      subtitle: "Je construis l'infrastructure qui connecte tes outils, automatise tes suivis et libère ton équipe du travail manuel répétitif. Des systèmes documentés que tu peux opérer sans moi.",
       cta: 'Réserver un appel découverte',
       ctaSecondary: 'Voir la méthode',
       reassurance: 'Appel sans engagement. Réponse sous 24 h.',
     },
     pains: {
-      title: 'Vous reconnaissez ça ?',
-      subtitle: 'Quatre signes que vos opérations vous coûtent plus que vous ne le réalisez.',
+      title: 'Tu reconnais ça ?',
+      subtitle: 'Quatre signes que tes opérations te coûtent plus que tu le réalises.',
       items: [
-        { title: 'Bureau et terrain déconnectés', text: "Vos équipes terrain et votre bureau ne se parlent pas. Les bons de travail, les photos, les signatures se perdent entre les deux." },
-        { title: 'Les mêmes tâches, chaque semaine', text: "Vous refaites manuellement les mêmes suivis, les mêmes relances, les mêmes rapports. Personne ne devrait passer 6 heures par semaine à copier-coller." },
-        { title: 'La croissance bloquée par les opérations', text: "Vous refusez des contrats. Pas par manque de clients, mais parce que vos processus internes s'effondreraient sous la charge supplémentaire." },
-        { title: 'Des outils qui ne se parlent pas', text: "CRM, facturation, dispatch, comptabilité : chacun fait sa job, mais aucun ne communique avec l'autre. Vous devenez le pont humain entre vos propres logiciels." },
+        { title: 'Bureau et terrain déconnectés', text: "Tes équipes terrain et ton bureau ne se parlent pas. Les bons de travail, les photos, les signatures se perdent entre les deux." },
+        { title: 'Les mêmes tâches, chaque semaine', text: "Tu refais manuellement les mêmes suivis, les mêmes relances, les mêmes rapports. Personne ne devrait passer 6 heures par semaine à copier-coller." },
+        { title: 'La croissance bloquée par les opérations', text: "Tu refuses des contrats. Pas par manque de clients, mais parce que tes processus internes s'effondreraient sous la charge supplémentaire." },
+        { title: 'Des outils qui ne se parlent pas', text: "CRM, facturation, dispatch, comptabilité : chacun fait sa job, mais aucun ne communique avec l'autre. Tu deviens le pont humain entre tes propres logiciels." },
       ],
+    },
+    auditCta: {
+      text: "Tu veux un diagnostic avant d'appeler ?",
+      sub: 'Nomme tes 3 outils principaux et reçois un verdict direct. Gratuit, ça prend 2 minutes.',
+      cta: 'Faire le test',
     },
     fit: {
       title: 'Pour qui je travaille',
       subtitle: "Le bon fit, c'est ce qui rend les mandats prévisibles.",
       yes: {
-        title: "C'est pour vous si",
+        title: "C'est pour toi si",
         items: [
-          'Vous dirigez une PME québécoise en services terrain, construction ou métiers spécialisés',
-          'Vous avez entre 5 et 50 employés et vos opérations sont devenues le goulot',
-          'Vous utilisez déjà des outils (CRM, dispatch, facturation) mais ils ne se parlent pas',
-          'Vous voulez un système documenté que votre équipe peut opérer sans dépendre du consultant',
+          'Tu diriges une PME québécoise en services terrain, construction ou métiers spécialisés',
+          'Tu as entre 5 et 50 employés et tes opérations sont devenues le goulot',
+          'Tu utilises déjà des outils (CRM, dispatch, facturation) mais ils ne se parlent pas',
+          'Tu veux un système documenté que ton équipe peut opérer sans dépendre du consultant',
         ],
       },
       no: {
-        title: "C'est pas pour vous si",
+        title: "C'est pas pour toi si",
         items: [
-          'Vous cherchez le prix le plus bas plutôt que la solution la plus durable',
-          'Vous voulez un agent IA gadget sans toucher à vos processus de fond',
-          "Vous n'avez personne dans votre équipe pour participer à la phase de découverte",
-          'Vous voulez du code livré sans documentation ni formation',
+          'Tu cherches le prix le plus bas plutôt que la solution la plus durable',
+          'Tu veux un agent IA gadget sans toucher à tes processus de fond',
+          "Tu n'as personne dans ton équipe pour participer à la phase de découverte",
+          'Tu veux du code livré sans documentation ni formation',
         ],
       },
     },
@@ -77,24 +84,25 @@ const content = {
       title: 'Comment ça fonctionne',
       subtitle: 'Une séquence claire, des livrables définis à chaque étape, aucune surprise sur la facture.',
       steps: [
-        { duration: '30 min', title: 'Appel découverte', text: "Sans engagement. On cartographie votre opération complète et on identifie où le temps se perd." },
-        { duration: '1 à 2 sem.', title: 'Audit et architecture', text: "Diagnostic complet de votre situation actuelle, plan d'architecture cible, estimation du ROI avant tout engagement." },
-        { duration: '2 à 6 sem.', title: 'Implémentation', text: "On construit, on intègre vos outils existants, on documente chaque flux, on forme votre équipe sur le système livré." },
-        { duration: 'Permanent', title: 'Autonomie garantie', text: "Vous repartez avec un système que votre équipe comprend et peut opérer. Pas de verrou technique, pas de dépendance." },
+        { duration: '30 min', title: 'Appel découverte', text: "Sans engagement. On cartographie ton opération complète et on identifie où le temps se perd." },
+        { duration: '1 à 2 sem.', title: 'Audit et architecture', text: "Diagnostic complet de ta situation actuelle, plan d'architecture cible, estimation du ROI avant tout engagement." },
+        { duration: '2 à 6 sem.', title: 'Implémentation', text: "On construit, on intègre tes outils existants, on documente chaque flux, on forme ton équipe sur le système livré." },
+        { duration: 'Permanent', title: 'Autonomie garantie', text: "Tu repars avec un système que ton équipe comprend et peut opérer. Pas de verrou technique, pas de dépendance." },
       ],
     },
     services: {
       title: "Ce qu'on construit ensemble",
       subtitle: 'Trois piliers, une architecture cohérente.',
       items: [
-        { title: 'Automatisation des opérations', text: "Vos outils existants, enfin connectés. J'orchestre vos systèmes avec n8n pour éliminer les ressaisies et les pertes d'information entre vos plateformes." },
-        { title: 'Infrastructure de gestion', text: "Une base de données structurée, un CRM connecté, des tableaux de bord en temps réel. Une seule source de vérité pour piloter votre entreprise." },
+        { title: 'Automatisation des opérations', text: "Tes outils existants, enfin connectés. J'orchestre tes systèmes avec n8n pour éliminer les ressaisies et les pertes d'information entre tes plateformes." },
+        { title: 'Infrastructure de gestion', text: "Une base de données structurée, un CRM connecté, des tableaux de bord en temps réel. Une seule source de vérité pour piloter ton entreprise." },
         { title: 'Systèmes de terrain', text: "Dispatch automatisé, suivi des techniciens, synchronisation bureau-terrain, rappels et confirmations automatiques. Le terrain et le bureau enfin alignés." },
       ],
     },
     about: {
       title: "L'architecte derrière les systèmes",
-      body: "Je ne vends pas des outils. Je construis l'infrastructure qui permet à votre entreprise de grandir sans que vous ayez à être partout en même temps. Chaque mandat se termine avec une documentation complète et une équipe formée, parce qu'un système que vous ne comprenez pas est une dette, pas un actif.",
+      body: "Je ne vends pas des outils. Je construis l'infrastructure qui permet à ton entreprise de grandir sans que tu aies à être partout en même temps. Chaque mandat se termine avec une documentation complète et une équipe formée, parce qu'un système que tu ne comprends pas est une dette, pas un actif.",
+      proof: "Dernier mandat en date : plus de 40 heures de saisie et de coordination manuelles évitées chaque semaine. L'équivalent d'un poste administratif à temps plein.",
       signature: 'William Fomete, Solutions Architect',
       location: 'Québec, Canada',
       linkedin: 'Profil LinkedIn',
@@ -198,6 +206,11 @@ const content = {
         { title: "Tools that don't talk", text: "CRM, billing, dispatch, accounting: each does its job, but none communicates with the others. You become the human bridge between your own software." },
       ],
     },
+    auditCta: {
+      text: 'Want a diagnosis before booking a call?',
+      sub: 'Name your 3 main tools and get a straight verdict. Free, takes 2 minutes.',
+      cta: 'Take the test',
+    },
     fit: {
       title: 'Who I work with',
       subtitle: 'The right fit is what makes engagements predictable.',
@@ -242,6 +255,7 @@ const content = {
     about: {
       title: 'The architect behind the systems',
       body: "I don't sell tools. I build the infrastructure that lets your business grow without you having to be everywhere at once. Every engagement ends with full documentation and a trained team, because a system you don't understand is a liability, not an asset.",
+      proof: 'Latest engagement: over 40 hours of manual data entry and coordination avoided every week. The equivalent of one full-time administrative role.',
       signature: 'William Fomete, Solutions Architect',
       location: 'Quebec, Canada',
       linkedin: 'LinkedIn profile',
@@ -350,7 +364,7 @@ function ArrowIcon({ size = 14 }) {
 }
 
 function Button({ href, children, variant = 'primary', size = 'md', showArrow = false, className = '', disabled = false, type, ...props }) {
-  const base = 'inline-flex items-center justify-center transition-colors'
+  const base = 'group inline-flex items-center justify-center transition-colors'
   const sizes = {
     sm: 'gap-1.5 px-3.5 py-1.5 text-[13px] font-medium rounded-md',
     md: 'gap-2 px-5 py-3 text-[14px] font-medium rounded-md',
@@ -362,11 +376,17 @@ function Button({ href, children, variant = 'primary', size = 'md', showArrow = 
   }
   const classes = `${base} ${sizes[size]} ${variants[variant]} ${disabled ? 'opacity-60 cursor-not-allowed pointer-events-none' : ''} ${className}`
 
+  const arrow = showArrow && (
+    <span className="transition-transform duration-200 group-hover:translate-x-0.5">
+      <ArrowIcon size={14} />
+    </span>
+  )
+
   if (href) {
     return (
       <a href={href} className={classes} {...props}>
         {children}
-        {showArrow && <ArrowIcon size={14} />}
+        {arrow}
       </a>
     )
   }
@@ -374,7 +394,7 @@ function Button({ href, children, variant = 'primary', size = 'md', showArrow = 
   return (
     <button type={type || 'button'} disabled={disabled} className={classes} {...props}>
       {children}
-      {showArrow && <ArrowIcon size={14} />}
+      {arrow}
     </button>
   )
 }
@@ -533,7 +553,7 @@ function Navbar({ lang, setLang, t }) {
 
 function Hero({ t }) {
   return (
-    <section id="top" className="relative pt-40 pb-32 px-6 lg:px-8 overflow-hidden">
+    <section id="top" className="relative min-h-screen flex items-center pt-24 pb-16 px-6 lg:px-8 overflow-hidden">
       <div className="absolute inset-0 -z-10">
         <div className="absolute inset-0 bg-gradient-to-b from-violet-500/10 via-transparent to-transparent" />
         <div
@@ -546,7 +566,7 @@ function Hero({ t }) {
           }}
         />
       </div>
-      <div className="max-w-5xl mx-auto relative">
+      <div className="max-w-5xl mx-auto relative w-full">
         <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-white/5 border border-white/10 rounded-full text-[12px] font-medium text-white/70 mb-8">
           <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full"></span>
           {t.hero.location}
@@ -573,10 +593,7 @@ function Hero({ t }) {
           </Button>
         </div>
         <p className="mt-4 text-[13px] text-white/40">
-          {t.hero.reassurance}{' '}
-          <a href="#contact" className="text-white/60 hover:text-white underline underline-offset-2 transition-colors">
-            {t.contact.title} →
-          </a>
+          {t.hero.reassurance}
         </p>
       </div>
     </section>
@@ -597,20 +614,42 @@ function SectionHeader({ title, subtitle }) {
 function Pains({ t }) {
   return (
     <section className="py-24 px-6 lg:px-8 border-t border-white/10">
-      <div className="max-w-6xl mx-auto">
+      <div className="max-w-6xl mx-auto" data-reveal>
         <SectionHeader title={t.pains.title} subtitle={t.pains.subtitle} />
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {t.pains.items.map((pain, i) => (
-            <div key={i} className="group relative bg-white/[0.02] border border-white/10 rounded-xl p-7 hover:bg-white/[0.04] hover:border-white/20 transition-all">
+            <div key={i} className="group relative bg-white/[0.03] border border-white/10 rounded-xl p-7 hover:bg-white/[0.05] hover:border-white/20 hover:-translate-y-1 transition-all duration-300">
               <div className="text-[12px] font-medium text-white/30 tabular-nums mb-4">
                 {'0' + (i + 1)}
               </div>
               <h3 className="text-[17px] font-medium text-white mb-2">
                 {pain.title}
               </h3>
-              <p className="text-[14px] text-white/55 leading-relaxed">{pain.text}</p>
+              <p className="text-[14px] text-white/60 leading-relaxed">{pain.text}</p>
             </div>
           ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+function AuditCTA({ t }) {
+  return (
+    <section className="px-6 lg:px-8 pb-24">
+      <div className="max-w-6xl mx-auto" data-reveal>
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5 bg-white/[0.03] border border-white/10 rounded-xl px-7 py-6">
+          <div>
+            <p className="text-[15px] font-medium text-white">{t.auditCta.text}</p>
+            <p className="text-[13px] text-white/50 mt-1">{t.auditCta.sub}</p>
+          </div>
+          <Link
+            to="/audit"
+            className="inline-flex items-center gap-2 px-4 py-2 text-[13px] font-medium text-white border border-white/15 rounded-md hover:bg-white/5 hover:border-white/30 transition-colors flex-shrink-0"
+          >
+            {t.auditCta.cta}
+            <ArrowIcon size={12} />
+          </Link>
         </div>
       </div>
     </section>
@@ -620,10 +659,10 @@ function Pains({ t }) {
 function Fit({ t }) {
   return (
     <section className="py-24 px-6 lg:px-8 border-t border-white/10">
-      <div className="max-w-6xl mx-auto">
+      <div className="max-w-6xl mx-auto" data-reveal>
         <SectionHeader title={t.fit.title} subtitle={t.fit.subtitle} />
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="bg-white/[0.02] border border-white/10 rounded-xl p-8">
+          <div className="bg-white/[0.03] border border-white/10 rounded-xl p-8">
             <div className="flex items-center gap-2.5 mb-6">
               <div className="w-7 h-7 bg-emerald-400/10 text-emerald-400 rounded-full flex items-center justify-center">
                 <CheckIcon size={14} />
@@ -641,7 +680,7 @@ function Fit({ t }) {
               ))}
             </ul>
           </div>
-          <div className="bg-white/[0.02] border border-white/10 rounded-xl p-8">
+          <div className="bg-white/[0.03] border border-white/10 rounded-xl p-8">
             <div className="flex items-center gap-2.5 mb-6">
               <div className="w-7 h-7 bg-white/5 text-white/40 rounded-full flex items-center justify-center">
                 <XIcon size={14} />
@@ -668,7 +707,7 @@ function Fit({ t }) {
 function Method({ t }) {
   return (
     <section id="method" className="py-24 px-6 lg:px-8 border-t border-white/10">
-      <div className="max-w-6xl mx-auto">
+      <div className="max-w-6xl mx-auto" data-reveal>
         <SectionHeader title={t.method.title} subtitle={t.method.subtitle} />
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {t.method.steps.map((step, i) => (
@@ -681,7 +720,7 @@ function Method({ t }) {
               </div>
               <div className="w-8 h-px bg-white/15 mb-4"></div>
               <h3 className="text-[15px] font-medium text-white mb-2">{step.title}</h3>
-              <p className="text-[14px] text-white/55 leading-relaxed">{step.text}</p>
+              <p className="text-[14px] text-white/60 leading-relaxed">{step.text}</p>
             </div>
           ))}
         </div>
@@ -693,16 +732,16 @@ function Method({ t }) {
 function Services({ t }) {
   return (
     <section id="services" className="py-24 px-6 lg:px-8 border-t border-white/10">
-      <div className="max-w-6xl mx-auto">
+      <div className="max-w-6xl mx-auto" data-reveal>
         <SectionHeader title={t.services.title} subtitle={t.services.subtitle} />
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {t.services.items.map((service, i) => (
-            <div key={i} className="bg-white/[0.02] border border-white/10 rounded-xl p-7 hover:bg-white/[0.04] hover:border-white/20 transition-all">
+            <div key={i} className="bg-white/[0.03] border border-white/10 rounded-xl p-7 hover:bg-white/[0.05] hover:border-white/20 hover:-translate-y-1 transition-all duration-300">
               <div className="text-[12px] font-medium text-white/30 tabular-nums mb-4">
                 {'0' + (i + 1)}
               </div>
               <h3 className="text-[16px] font-medium text-white mb-3">{service.title}</h3>
-              <p className="text-[14px] text-white/55 leading-relaxed">{service.text}</p>
+              <p className="text-[14px] text-white/60 leading-relaxed">{service.text}</p>
             </div>
           ))}
         </div>
@@ -714,13 +753,18 @@ function Services({ t }) {
 function About({ t }) {
   return (
     <section id="about" className="py-24 px-6 lg:px-8 border-t border-white/10">
-      <div className="max-w-3xl mx-auto">
+      <div className="max-w-3xl mx-auto" data-reveal>
         <h2 className="text-3xl sm:text-4xl font-semibold tracking-tight text-white mb-8">
           {t.about.title}
         </h2>
-        <p className="text-[17px] text-white/70 leading-relaxed mb-10">
+        <p className="text-[17px] text-white/70 leading-relaxed mb-8">
           {t.about.body}
         </p>
+        {t.about.proof && (
+          <p className="text-[15px] text-white/60 leading-relaxed mb-10 pl-4 border-l-2 border-white/20">
+            {t.about.proof}
+          </p>
+        )}
         <div className="flex flex-wrap items-center gap-6 pt-8 border-t border-white/10">
           <div>
             <div className="text-[14px] font-medium text-white">{t.about.signature}</div>
@@ -815,7 +859,7 @@ function ContactForm({ t, lang, onOpenPrivacy }) {
 
   if (status === 'success') {
     return (
-      <div className="bg-white/[0.02] border border-white/10 rounded-xl p-8 text-center">
+      <div className="bg-white/[0.03] border border-white/10 rounded-xl p-8 text-center">
         <div className="w-10 h-10 mx-auto mb-4 bg-emerald-400/10 text-emerald-400 rounded-full flex items-center justify-center">
           <CheckIcon size={18} />
         </div>
@@ -825,7 +869,7 @@ function ContactForm({ t, lang, onOpenPrivacy }) {
   }
 
   return (
-    <form onSubmit={handleSubmit} noValidate className="relative bg-white/[0.02] border border-white/10 rounded-xl p-6 sm:p-8 space-y-5">
+    <form onSubmit={handleSubmit} noValidate className="relative bg-white/[0.03] border border-white/10 rounded-xl p-6 sm:p-8 space-y-5">
       {status === 'error' && (
         <div className="rounded-md border border-red-400/30 bg-red-400/10 px-4 py-3 text-[13px] text-red-300">
           <p>{t.contact.error}</p>
@@ -890,11 +934,11 @@ function ContactForm({ t, lang, onOpenPrivacy }) {
           disabled={status === 'loading'}
           error={errors.secteur}
         >
-          <option value="" disabled className="bg-[#0A0A0B] text-white/50">
+          <option value="" disabled className="bg-[#141416] text-white/50">
             {t.contact.fields.secteurPlaceholder}
           </option>
           {SECTEUR_OPTIONS[lang].map((opt) => (
-            <option key={opt.value} value={opt.value} className="bg-[#0A0A0B]">
+            <option key={opt.value} value={opt.value} className="bg-[#141416]">
               {opt.label}
             </option>
           ))}
@@ -960,7 +1004,7 @@ function ContactForm({ t, lang, onOpenPrivacy }) {
 function Contact({ t, lang, onOpenPrivacy }) {
   return (
     <section id="contact" className="py-24 px-6 lg:px-8 border-t border-white/10">
-      <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start">
+      <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start" data-reveal>
         <div>
           <h2 className="text-3xl sm:text-4xl font-semibold text-white tracking-tight">
             {t.contact.title}
@@ -1018,7 +1062,7 @@ function FinalCTA({ t }) {
   return (
     <section className="py-32 px-6 lg:px-8 border-t border-white/10 relative overflow-hidden">
       <div className="absolute inset-0 -z-10 bg-gradient-to-t from-violet-500/10 to-transparent" />
-      <div className="max-w-3xl mx-auto text-center">
+      <div className="max-w-3xl mx-auto text-center" data-reveal>
         <h2 className="text-4xl sm:text-5xl font-semibold leading-[1.1] tracking-tight text-white">
           {t.finalCta.title}
         </h2>
@@ -1091,8 +1135,8 @@ function PrivacyModal({ t, open, onClose }) {
         className="absolute inset-0 bg-black/70 backdrop-blur-sm"
         onClick={onClose}
       />
-      <div className="relative w-full max-w-2xl max-h-[85vh] overflow-y-auto bg-[#0D0D0F] border border-white/10 rounded-2xl">
-        <div className="sticky top-0 flex items-center justify-between px-6 sm:px-8 py-5 border-b border-white/10 bg-[#0D0D0F]/95 backdrop-blur">
+      <div className="relative w-full max-w-2xl max-h-[85vh] overflow-y-auto bg-[#19191C] border border-white/10 rounded-2xl">
+        <div className="sticky top-0 flex items-center justify-between px-6 sm:px-8 py-5 border-b border-white/10 bg-[#19191C]/95 backdrop-blur">
           <div>
             <h2 className="text-[18px] font-semibold text-white">{t.privacy.title}</h2>
             <p className="text-[12px] text-white/40 mt-0.5">{t.privacy.updated}</p>
@@ -1110,7 +1154,7 @@ function PrivacyModal({ t, open, onClose }) {
           {t.privacy.sections.map((s, i) => (
             <div key={i}>
               <h3 className="text-[14px] font-medium text-white mb-1.5">{s.heading}</h3>
-              <p className="text-[13px] text-white/55 leading-relaxed">{s.body}</p>
+              <p className="text-[13px] text-white/60 leading-relaxed">{s.body}</p>
             </div>
           ))}
         </div>
@@ -1119,39 +1163,66 @@ function PrivacyModal({ t, open, onClose }) {
   )
 }
 
-function App() {
-  const [lang, setLang] = useState('fr')
-  const [privacyOpen, setPrivacyOpen] = useState(false)
-
-  useEffect(() => {
+function HomePage() {
+  const [lang, setLang] = useState(() => {
     const stored = localStorage.getItem('corenode-lang')
-    if (stored === 'fr' || stored === 'en') setLang(stored)
-  }, [])
+    return stored === 'fr' || stored === 'en' ? stored : 'fr'
+  })
+  const [privacyOpen, setPrivacyOpen] = useState(false)
 
   useEffect(() => {
     localStorage.setItem('corenode-lang', lang)
     document.documentElement.lang = lang
   }, [lang])
 
+  useEffect(() => {
+    const els = document.querySelectorAll('[data-reveal]')
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('reveal-visible')
+            io.unobserve(entry.target)
+          }
+        })
+      },
+      { rootMargin: '0px 0px -8% 0px' }
+    )
+    els.forEach((el) => io.observe(el))
+    return () => io.disconnect()
+  }, [])
+
   const t = content[lang]
   const openPrivacy = () => setPrivacyOpen(true)
 
   return (
-    <div className="min-h-screen bg-[#0A0A0B] text-white antialiased">
+    <div className="min-h-screen bg-[#141416] text-white antialiased">
       <Navbar lang={lang} setLang={setLang} t={t} />
       <main>
         <Hero t={t} />
-        <Contact t={t} lang={lang} onOpenPrivacy={openPrivacy} />
         <Pains t={t} />
+        <AuditCTA t={t} />
         <Fit t={t} />
         <Method t={t} />
         <Services t={t} />
         <About t={t} />
+        <Contact t={t} lang={lang} onOpenPrivacy={openPrivacy} />
         <FinalCTA t={t} />
       </main>
       <Footer t={t} onOpenPrivacy={openPrivacy} />
       <PrivacyModal t={t} open={privacyOpen} onClose={() => setPrivacyOpen(false)} />
     </div>
+  )
+}
+
+function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/audit" element={<AuditPage />} />
+      </Routes>
+    </BrowserRouter>
   )
 }
 
