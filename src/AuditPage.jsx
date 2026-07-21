@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
+import logoImg from './assets/logo.png'
 
 const CAL_LINK = 'https://cal.com/corenode-systems/meeting-de-30-min'
 const WEBHOOK_URL = import.meta.env.VITE_AUDIT_WEBHOOK_URL
@@ -102,12 +103,7 @@ function Spinner({ size = 16 }) {
 function Logo() {
   return (
     <div className="flex items-center gap-2.5">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect x="2" y="2" width="9" height="9" rx="1.5" fill="#fff" />
-        <rect x="13" y="2" width="9" height="9" rx="1.5" stroke="#fff" strokeWidth="1.5" />
-        <rect x="2" y="13" width="9" height="9" rx="1.5" stroke="#fff" strokeWidth="1.5" />
-        <rect x="13" y="13" width="9" height="9" rx="1.5" fill="#fff" />
-      </svg>
+      <img src={logoImg} alt="CoreNode Systems" width="26" height="26" className="block" />
       <span className="text-[15px] font-semibold tracking-tight text-white">CoreNode</span>
     </div>
   )
