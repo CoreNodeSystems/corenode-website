@@ -26,9 +26,9 @@ const content = {
     subtitle:
       "Nomme les 3 outils que ton entreprise utilise le plus. Tu reçois un verdict direct sur ce qui fuit dans ton opération. Pas d'appel, pas de pitch.",
     tools: [
-      { id: 'outil1', label: 'Outil #1', placeholder: 'Ex. : QuickBooks' },
-      { id: 'outil2', label: 'Outil #2', placeholder: 'Ex. : Excel (dispatch, soumissions…)' },
-      { id: 'outil3', label: 'Outil #3', placeholder: 'Ex. : Jobber, ServiceTitan, courriels…' },
+      { id: 'outil1', label: 'Outil 1', placeholder: 'Ex. : QuickBooks' },
+      { id: 'outil2', label: 'Outil 2', placeholder: 'Ex. : Excel (dispatch, soumissions…)' },
+      { id: 'outil3', label: 'Outil 3', placeholder: 'Ex. : Jobber, ServiceTitan, courriels…' },
     ],
     emailLabel: 'Ton courriel',
     emailPlaceholder: 'toi@tonentreprise.com',
