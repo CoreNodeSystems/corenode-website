@@ -82,20 +82,6 @@ const content = {
     rights: '© 2026 CoreNode Systems. Quebec, Canada.',
   },
 }
-function AuditPage() {
-  const [outil1, setOutil1] = useState('');
-  const [outil2, setOutil2] = useState('');
-  const [outil3, setOutil3] = useState('');
-
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    if (params.get('outil1')) setOutil1(params.get('outil1'));
-    if (params.get('outil2')) setOutil2(params.get('outil2'));
-    if (params.get('outil3')) setOutil3(params.get('outil3'));
-  }, []);
-
-  // ... reste du composant, les inputs utilisent déjà outil1/outil2/outil3 comme value
-}
 function ArrowIcon({ size = 14 }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -170,6 +156,22 @@ export default function AuditPage() {
     localStorage.setItem('corenode-lang', lang)
     document.documentElement.lang = lang
   }, [lang])
+
+  // Préremplissage depuis un lien partagé en commentaire (?outil1=...&outil2=...&outil3=...)
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    const outil1 = params.get('outil1')
+    const outil2 = params.get('outil2')
+    const outil3 = params.get('outil3')
+    if (outil1 || outil2 || outil3) {
+      setForm((prev) => ({
+        ...prev,
+        outil1: outil1 || prev.outil1,
+        outil2: outil2 || prev.outil2,
+        outil3: outil3 || prev.outil3,
+      }))
+    }
+  }, [])
 
   const t = content[lang]
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
