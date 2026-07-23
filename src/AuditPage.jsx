@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import logoImg from './assets/logo.png'
 
+
 const CAL_LINK = 'https://cal.com/corenode-systems/meeting-de-30-min'
 const WEBHOOK_URL = import.meta.env.VITE_AUDIT_WEBHOOK_URL
 
@@ -81,7 +82,20 @@ const content = {
     rights: '© 2026 CoreNode Systems. Quebec, Canada.',
   },
 }
+function AuditPage() {
+  const [outil1, setOutil1] = useState('');
+  const [outil2, setOutil2] = useState('');
+  const [outil3, setOutil3] = useState('');
 
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('outil1')) setOutil1(params.get('outil1'));
+    if (params.get('outil2')) setOutil2(params.get('outil2'));
+    if (params.get('outil3')) setOutil3(params.get('outil3'));
+  }, []);
+
+  // ... reste du composant, les inputs utilisent déjà outil1/outil2/outil3 comme value
+}
 function ArrowIcon({ size = 14 }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
