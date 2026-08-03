@@ -13,19 +13,28 @@
       rel="stylesheet"
     />
 
-    <title>Automatisation PME Québec — CRM et outils connectés pour services terrain | CoreNode Systems</title>
+    <!--
+      Valeurs de repli servies aux agents qui n'exécutent pas le JavaScript
+      (GPTBot, ClaudeBot, PerplexityBot, aperçus LinkedIn et Facebook).
+      Le composant src/seo/Seo.jsx les remplace par route à l'exécution.
+
+      Ne PAS remettre ici de <link rel="canonical"> ni de <meta property="og:url">.
+      vercel.json réécrit toutes les routes vers ce fichier, donc une canonique
+      figée déclare à Google que /audit est un doublon de l'accueil. C'était la
+      cause de l'état « Détectée, actuellement non indexée » relevé le 3 août 2026.
+      La canonique est émise par route dans Seo.jsx.
+    -->
+    <title>Automatisation PME Québec. CRM et outils connectés | CoreNode Systems</title>
     <meta
       name="description"
-      content="Consultant en automatisation pour PME québécoises en services terrain. CRM, facturation et dispatch enfin connectés — fini la ressaisie manuelle."
+      content="Consultant en automatisation pour PME québécoises en services terrain. CRM, facturation et dispatch enfin connectés. Fini la ressaisie manuelle."
     />
-    <link rel="canonical" href="https://corenodesystems.com/" />
 
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://corenodesystems.com/" />
     <meta property="og:site_name" content="CoreNode Systems" />
     <meta property="og:locale" content="fr_CA" />
-    <meta property="og:title" content="Automatisation PME Québec — CoreNode Systems" />
+    <meta property="og:title" content="Automatisation PME Québec. CoreNode Systems" />
     <meta
       property="og:description"
       content="J'intègre tes outils (CRM, facturation, dispatch) pour que ta PME arrête de perdre des heures en travail manuel. Systèmes documentés, équipe autonome."
@@ -33,7 +42,7 @@
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary" />
-    <meta name="twitter:title" content="Automatisation PME Québec — CoreNode Systems" />
+    <meta name="twitter:title" content="Automatisation PME Québec. CoreNode Systems" />
     <meta
       name="twitter:description"
       content="Consultant en automatisation et intégration d'outils pour PME québécoises en services terrain et métiers spécialisés."

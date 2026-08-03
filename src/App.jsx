@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react'
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom'
 import AuditPage from './AuditPage.jsx'
+import Seo from './seo/Seo.jsx'
+import { PAGES } from './seo/siteMeta.js'
 import logoImg from './assets/logo.png'
 
 const EMAIL = 'william@corenodesystems.com'
@@ -42,6 +44,7 @@ const content = {
       subtitle: "Je construis l'infrastructure qui connecte tes outils, automatise tes suivis et libère ton équipe du travail manuel répétitif. Des systèmes documentés que tu peux opérer sans moi.",
       cta: 'Réserver un appel découverte',
       ctaSecondary: 'Voir la méthode',
+      ctaAudit: 'Diagnostic gratuit en 2 minutes',
       reassurance: 'Appel sans engagement. Réponse sous 24 h.',
     },
     pains: {
@@ -117,6 +120,8 @@ const content = {
       tagline: 'Solutions Architect. Automatisation et infrastructure pour PME québécoises.',
       rights: '© 2026 CoreNode Systems. Québec, Canada.',
       privacy: 'Politique de confidentialité',
+      audit: 'Diagnostic gratuit',
+      home: 'Accueil',
     },
     contact: {
       title: 'Parlons de votre projet',
@@ -195,6 +200,7 @@ const content = {
       subtitle: "I build the infrastructure that connects your tools, automates your follow-ups and frees your team from repetitive manual work. Documented systems you can operate without me.",
       cta: 'Book a discovery call',
       ctaSecondary: 'See the method',
+      ctaAudit: 'Free 2-minute diagnostic',
       reassurance: 'No-commitment call. Reply within 24 h.',
     },
     pains: {
@@ -270,6 +276,8 @@ const content = {
       tagline: 'Solutions Architect. Automation and infrastructure for Quebec SMBs.',
       rights: '© 2026 CoreNode Systems. Quebec, Canada.',
       privacy: 'Privacy policy',
+      audit: 'Free diagnostic',
+      home: 'Home',
     },
     contact: {
       title: "Let's talk about your project",
@@ -590,6 +598,16 @@ function Hero({ t }) {
         </div>
         <p className="mt-4 text-[13px] text-white/40">
           {t.hero.reassurance}
+        </p>
+        {/* Ancre interne réelle vers /audit. Requis pour que Googlebot suive la
+            route. Un bouton avec onClick ne produit pas de <a href>. */}
+        <p className="mt-3 text-[13px]">
+          <Link
+            to="/audit"
+            className="text-white/60 hover:text-white underline underline-offset-4 decoration-white/25 hover:decoration-white/60 transition-colors"
+          >
+            {t.hero.ctaAudit}
+          </Link>
         </p>
       </div>
     </section>
@@ -1085,6 +1103,15 @@ function Footer({ t, onOpenPrivacy }) {
         <div>
           <Logo />
           <p className="text-[13px] text-white/45 mt-3 max-w-md">{t.footer.tagline}</p>
+          {/* Maillage interne. GSC rapportait zéro lien interne sur le domaine. */}
+          <nav className="flex flex-wrap gap-x-5 gap-y-2 mt-4 text-[13px]">
+            <Link to="/" className="text-white/60 hover:text-white transition-colors">
+              {t.footer.home}
+            </Link>
+            <Link to="/audit" className="text-white/60 hover:text-white transition-colors">
+              {t.footer.audit}
+            </Link>
+          </nav>
         </div>
         <div className="text-[13px] text-white/45 sm:text-right">
           <a href={MAILTO} className="text-white/80 hover:text-white block mb-1 transition-colors">
@@ -1193,6 +1220,7 @@ function HomePage() {
 
   return (
     <div className="min-h-screen bg-[#141416] text-white antialiased">
+      <Seo {...PAGES.home} />
       <Navbar lang={lang} setLang={setLang} t={t} />
       <main>
         <Hero t={t} />

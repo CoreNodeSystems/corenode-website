@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
+import Seo from './seo/Seo.jsx'
+import { PAGES } from './seo/siteMeta.js'
 import logoImg from './assets/logo.png'
 
 
@@ -246,6 +248,7 @@ export default function AuditPage() {
 
   return (
     <div className="min-h-screen bg-[#141416] text-white antialiased">
+      <Seo {...PAGES.audit} />
       <nav className="border-b border-white/10">
         <div className="max-w-6xl mx-auto px-6 lg:px-8 h-16 flex items-center justify-between">
           <Link to="/" className="flex items-center">
