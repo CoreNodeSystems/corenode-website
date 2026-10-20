@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
-import { BrowserRouter, Routes, Route, Link } from 'react-router-dom'
+import { Routes, Route, Link } from 'react-router-dom'
+import useLang from './useLang.js'
 import AuditPage from './AuditPage.jsx'
 import Seo from './seo/Seo.jsx'
 import { PAGES } from './seo/siteMeta.js'
@@ -1187,16 +1188,8 @@ function PrivacyModal({ t, open, onClose }) {
 }
 
 function HomePage() {
-  const [lang, setLang] = useState(() => {
-    const stored = localStorage.getItem('corenode-lang')
-    return stored === 'fr' || stored === 'en' ? stored : 'fr'
-  })
+  const [lang, setLang] = useLang()
   const [privacyOpen, setPrivacyOpen] = useState(false)
-
-  useEffect(() => {
-    localStorage.setItem('corenode-lang', lang)
-    document.documentElement.lang = lang
-  }, [lang])
 
   useEffect(() => {
     const els = document.querySelectorAll('[data-reveal]')
@@ -1239,14 +1232,14 @@ function HomePage() {
   )
 }
 
+// Le routeur est fourni par l'appelant : BrowserRouter dans le navigateur
+// (main.jsx), StaticRouter au prérendu (entry-server.jsx).
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/audit" element={<AuditPage />} />
-      </Routes>
-    </BrowserRouter>
+    <Routes>
+      <Route path="/" element={<HomePage />} />
+      <Route path="/audit" element={<AuditPage />} />
+    </Routes>
   )
 }
 
