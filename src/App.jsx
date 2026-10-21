@@ -5,6 +5,9 @@ import AuditPage from './AuditPage.jsx'
 import Seo from './seo/Seo.jsx'
 import { PAGES } from './seo/siteMeta.js'
 import logoImg from './assets/logo.png'
+import { STACK } from './stack.js'
+import portraitWebp from './assets/william-fomete.webp'
+import portraitJpg from './assets/william-fomete.jpg'
 
 const EMAIL = 'william@corenodesystems.com'
 const MAILTO = 'mailto:' + EMAIL
@@ -44,9 +47,26 @@ const content = {
       titleB: 'entre tes propres logiciels.',
       subtitle: "Je construis l'infrastructure qui connecte tes outils, automatise tes suivis et libère ton équipe du travail manuel répétitif. Des systèmes documentés que tu peux opérer sans moi.",
       cta: 'Réserver un appel découverte',
-      ctaSecondary: 'Voir la méthode',
       ctaAudit: 'Diagnostic gratuit en 2 minutes',
       reassurance: 'Appel sans engagement. Réponse sous 24 h.',
+      proofHours: '40 h',
+      proofHoursLabel: 'de travail manuel évitées chaque semaine pour mon dernier client',
+      proofRating: '5,0',
+      proofRatingLabel: 'sur Google, 3 avis',
+      flow: {
+        caption: 'Exemple de flux pour une entreprise de services terrain',
+        steps: [
+          { title: 'Appel du client', text: 'Fiche client créée dans le CRM', tool: 'Zoho CRM' },
+          { title: 'Bon de travail', text: "Généré avec l'adresse et le problème", tool: 'Zoho FSM' },
+          { title: 'Dispatch', text: 'Technicien proposé selon la distance et l’horaire', tool: 'n8n + Google Maps' },
+          { title: 'Facture', text: 'Envoyée dès que le travail est signé', tool: 'QuickBooks' },
+        ],
+        result: 'Information tapée une seule fois',
+      },
+    },
+    stack: {
+      title: 'Les outils que je connecte au quotidien',
+      sub: "Je travaille avec ce que tu as déjà. On ajoute un outil seulement s'il règle un vrai problème.",
     },
     pains: {
       title: 'Tu reconnais ça ?',
@@ -109,6 +129,7 @@ const content = {
       body: "Je ne vends pas des outils. Je construis l'infrastructure qui permet à ton entreprise de grandir sans que tu aies à être partout en même temps. Chaque mandat se termine avec une documentation complète et une équipe formée, parce qu'un système que tu ne comprends pas est une dette, pas un actif.",
       proof: "Dernier mandat en date : plus de 40 heures de saisie et de coordination manuelles évitées chaque semaine. L'équivalent d'un poste administratif à temps plein.",
       signature: 'William Fomete, Solutions Architect',
+      photoAlt: 'William Fomete, fondateur de CoreNode Systems',
       location: 'Québec, Canada',
       linkedin: 'Profil LinkedIn',
     },
@@ -200,9 +221,26 @@ const content = {
       titleB: 'between your own software.',
       subtitle: "I build the infrastructure that connects your tools, automates your follow-ups and frees your team from repetitive manual work. Documented systems you can operate without me.",
       cta: 'Book a discovery call',
-      ctaSecondary: 'See the method',
       ctaAudit: 'Free 2-minute diagnostic',
       reassurance: 'No-commitment call. Reply within 24 h.',
+      proofHours: '40 h',
+      proofHoursLabel: 'of manual work avoided every week for my latest client',
+      proofRating: '5.0',
+      proofRatingLabel: 'on Google, 3 reviews',
+      flow: {
+        caption: 'Example flow for a field service business',
+        steps: [
+          { title: 'Customer call', text: 'Customer record created in the CRM', tool: 'Zoho CRM' },
+          { title: 'Work order', text: 'Generated with the address and the problem', tool: 'Zoho FSM' },
+          { title: 'Dispatch', text: 'Technician suggested by distance and schedule', tool: 'n8n + Google Maps' },
+          { title: 'Invoice', text: 'Sent as soon as the job is signed off', tool: 'QuickBooks' },
+        ],
+        result: 'Information typed only once',
+      },
+    },
+    stack: {
+      title: 'The tools I connect every day',
+      sub: 'I work with what you already have. A new tool only gets added if it solves a real problem.',
     },
     pains: {
       title: 'Sound familiar?',
@@ -265,6 +303,7 @@ const content = {
       body: "I don't sell tools. I build the infrastructure that lets your business grow without you having to be everywhere at once. Every engagement ends with full documentation and a trained team, because a system you don't understand is a liability, not an asset.",
       proof: 'Latest engagement: over 40 hours of manual data entry and coordination avoided every week. The equivalent of one full-time administrative role.',
       signature: 'William Fomete, Solutions Architect',
+      photoAlt: 'William Fomete, founder of CoreNode Systems',
       location: 'Quebec, Canada',
       linkedin: 'LinkedIn profile',
     },
@@ -541,75 +580,131 @@ function Navbar({ lang, setLang, t }) {
           >
             {lang === 'fr' ? 'EN' : 'FR'}
           </button>
-          <Button
-            href={BOOKING}
-            target="_blank"
-            rel="noopener noreferrer"
-            size="sm"
-            className="hidden sm:inline-flex"
-          >
-            {t.nav.cta}
-          </Button>
+          <span className="hidden sm:block">
+            <Button href={BOOKING} target="_blank" rel="noopener noreferrer" size="sm">
+              {t.nav.cta}
+            </Button>
+          </span>
         </div>
       </div>
     </nav>
   )
 }
 
+const GOOGLE_PROFILE = 'https://www.google.com/maps/place/?q=place_id:ChIJSWV3DMhRHCsR5zmth468YCA'
+
 function Hero({ t }) {
   return (
-    <section id="top" className="relative min-h-screen flex items-center pt-24 pb-16 px-6 lg:px-8 overflow-hidden">
-      <div className="absolute inset-0 -z-10">
-        <div className="absolute inset-0 bg-gradient-to-b from-violet-500/10 via-transparent to-transparent" />
-        <div
-          className="absolute inset-0 opacity-[0.04]"
-          style={{
-            backgroundImage: 'linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)',
-            backgroundSize: '60px 60px',
-            maskImage: 'radial-gradient(ellipse at top, black 30%, transparent 70%)',
-            WebkitMaskImage: 'radial-gradient(ellipse at top, black 30%, transparent 70%)',
-          }}
-        />
+    <section id="top" className="relative pt-32 pb-20 lg:pt-40 lg:pb-24 px-6 lg:px-8 overflow-hidden">
+      <div className="max-w-6xl mx-auto grid lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] gap-14 lg:gap-16 items-center">
+        <div>
+          <p className="inline-flex items-center gap-2 text-[13px] text-white/60 mb-7">
+            <span className="w-1.5 h-1.5 rounded-full bg-[var(--teal)]" aria-hidden="true"></span>
+            {t.hero.location}
+          </p>
+          <h1 className="text-[42px] leading-[1.05] sm:text-6xl lg:text-[64px] font-semibold text-white">
+            {t.hero.titleA} {t.hero.titleB}
+          </h1>
+          <p className="mt-7 text-lg text-white/65 max-w-xl leading-relaxed">
+            {t.hero.subtitle}
+          </p>
+          <div className="mt-9 flex flex-wrap items-center gap-3">
+            <Button href={BOOKING} target="_blank" rel="noopener noreferrer">
+              {t.hero.cta}
+            </Button>
+            {/* Vrai lien <a href="/audit"> : Googlebot doit pouvoir suivre la route. */}
+            <Link
+              to="/audit"
+              className="inline-flex items-center justify-center px-5 py-3 text-[14px] font-medium rounded-md text-white border border-white/15 hover:bg-white/5 hover:border-white/30 transition-colors"
+            >
+              {t.hero.ctaAudit}
+            </Link>
+          </div>
+          <p className="mt-4 text-[13px] text-white/45">{t.hero.reassurance}</p>
+
+          <dl className="mt-12 pt-8 border-t border-white/10 grid grid-cols-[auto_1fr] sm:grid-cols-[auto_1fr_auto_1fr] gap-x-4 gap-y-5 items-center max-w-xl">
+            <dt className="font-display text-3xl font-semibold text-white">{t.hero.proofHours}</dt>
+            <dd className="text-[13px] text-white/55 leading-snug">{t.hero.proofHoursLabel}</dd>
+            <dt className="font-display text-3xl font-semibold text-white">{t.hero.proofRating}</dt>
+            <dd className="text-[13px] leading-snug">
+              <a
+                href={GOOGLE_PROFILE}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-white/55 hover:text-white underline underline-offset-4 decoration-white/20 hover:decoration-white/60 transition-colors"
+              >
+                {t.hero.proofRatingLabel}
+              </a>
+            </dd>
+          </dl>
+        </div>
+
+        <HeroFlow flow={t.hero.flow} />
       </div>
-      <div className="max-w-5xl mx-auto relative w-full">
-        <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-white/5 border border-white/10 rounded-full text-[12px] font-medium text-white/70 mb-8">
-          <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full"></span>
-          {t.hero.location}
+    </section>
+  )
+}
+
+// Un bon de travail qui traverse les outils, joué une seule fois au chargement.
+function HeroFlow({ flow }) {
+  return (
+    <figure className="relative rounded-2xl border border-white/10 bg-[var(--panel)] p-6 sm:p-8">
+      <ol className="relative space-y-7">
+        <span className="absolute left-[5px] top-2 bottom-2 w-px bg-white/10" aria-hidden="true">
+          <span className="flow-rail-fill absolute inset-0 bg-[var(--teal)]"></span>
+        </span>
+        {flow.steps.map((step, i) => (
+          <li key={step.title} className="flow-step relative pl-8" style={{ '--i': i }}>
+            <span className="flow-dot absolute left-0 top-1.5 w-[11px] h-[11px] rounded-full" aria-hidden="true"></span>
+            <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+              <p className="text-[15px] font-medium text-white">{step.title}</p>
+              <p className="text-[12px] text-[var(--teal)]">{step.tool}</p>
+            </div>
+            <p className="mt-1 text-[14px] text-white/55 leading-relaxed">{step.text}</p>
+          </li>
+        ))}
+      </ol>
+      <p className="flow-result mt-8 rounded-lg bg-[var(--teal-soft)] px-4 py-3 text-[14px] font-medium text-white">
+        {flow.result}
+      </p>
+      <figcaption className="mt-4 text-[12px] text-white/40">{flow.caption}</figcaption>
+    </figure>
+  )
+}
+
+function StackLogo({ item }) {
+  return (
+    <li className="flex items-center gap-2.5 px-7 text-white/55 hover:text-white transition-colors">
+      {item.path && (
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
+          <path d={item.path} />
+        </svg>
+      )}
+      <span className="text-[15px] font-medium whitespace-nowrap">{item.name}</span>
+    </li>
+  )
+}
+
+function Stack({ t }) {
+  return (
+    <section aria-labelledby="stack-title" className="py-14 border-y border-white/10">
+      <div className="px-6 lg:px-8 mb-8">
+        <div className="max-w-6xl mx-auto flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2">
+          <h2 id="stack-title" className="text-xl font-semibold text-white">{t.stack.title}</h2>
+          <p className="text-[14px] text-white/50 max-w-md">{t.stack.sub}</p>
         </div>
-        <h1 className="text-5xl sm:text-6xl md:text-7xl font-semibold leading-[1.04] tracking-tight text-white">
-          {t.hero.titleA}
-          <br />
-          <span className="text-white/40">{t.hero.titleB}</span>
-        </h1>
-        <p className="mt-8 text-lg sm:text-xl text-white/60 max-w-2xl leading-relaxed">
-          {t.hero.subtitle}
-        </p>
-        <div className="mt-10 flex flex-wrap items-center gap-3">
-          <Button
-            href={BOOKING}
-            target="_blank"
-            rel="noopener noreferrer"
-            showArrow
-          >
-            {t.hero.cta}
-          </Button>
-          <Button href="#method" variant="secondary">
-            {t.hero.ctaSecondary}
-          </Button>
+      </div>
+      {/* La liste est dupliquée pour un défilement sans couture ; la copie est
+          masquée aux lecteurs d'écran et retirée si le mouvement est réduit. */}
+      <div className="marquee overflow-hidden">
+        <div className="marquee-track">
+          <ul className="flex shrink-0 items-center gap-y-6">
+            {STACK.map((item) => <StackLogo key={item.name} item={item} />)}
+          </ul>
+          <ul className="flex shrink-0 items-center" aria-hidden="true" data-clone>
+            {STACK.map((item) => <StackLogo key={item.name} item={item} />)}
+          </ul>
         </div>
-        <p className="mt-4 text-[13px] text-white/40">
-          {t.hero.reassurance}
-        </p>
-        {/* Ancre interne réelle vers /audit. Requis pour que Googlebot suive la
-            route. Un bouton avec onClick ne produit pas de <a href>. */}
-        <p className="mt-3 text-[13px]">
-          <Link
-            to="/audit"
-            className="text-white/60 hover:text-white underline underline-offset-4 decoration-white/25 hover:decoration-white/60 transition-colors"
-          >
-            {t.hero.ctaAudit}
-          </Link>
-        </p>
       </div>
     </section>
   )
@@ -629,14 +724,11 @@ function SectionHeader({ title, subtitle }) {
 function Pains({ t }) {
   return (
     <section className="py-24 px-6 lg:px-8 border-t border-white/10">
-      <div className="max-w-6xl mx-auto" data-reveal>
+      <div className="max-w-6xl mx-auto">
         <SectionHeader title={t.pains.title} subtitle={t.pains.subtitle} />
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {t.pains.items.map((pain, i) => (
-            <div key={i} className="group relative bg-white/[0.03] border border-white/10 rounded-xl p-7 hover:bg-white/[0.05] hover:border-white/20 hover:-translate-y-1 transition-all duration-300">
-              <div className="text-[12px] font-medium text-white/30 tabular-nums mb-4">
-                {'0' + (i + 1)}
-              </div>
+            <div key={i} className="bg-white/[0.03] border border-white/10 rounded-xl p-7">
               <h3 className="text-[17px] font-medium text-white mb-2">
                 {pain.title}
               </h3>
@@ -652,7 +744,7 @@ function Pains({ t }) {
 function AuditCTA({ t }) {
   return (
     <section className="px-6 lg:px-8 pb-24">
-      <div className="max-w-6xl mx-auto" data-reveal>
+      <div className="max-w-6xl mx-auto">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5 bg-white/[0.03] border border-white/10 rounded-xl px-7 py-6">
           <div>
             <p className="text-[15px] font-medium text-white">{t.auditCta.text}</p>
@@ -674,12 +766,12 @@ function AuditCTA({ t }) {
 function Fit({ t }) {
   return (
     <section className="py-24 px-6 lg:px-8 border-t border-white/10">
-      <div className="max-w-6xl mx-auto" data-reveal>
+      <div className="max-w-6xl mx-auto">
         <SectionHeader title={t.fit.title} subtitle={t.fit.subtitle} />
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="bg-white/[0.03] border border-white/10 rounded-xl p-8">
             <div className="flex items-center gap-2.5 mb-6">
-              <div className="w-7 h-7 bg-emerald-400/10 text-emerald-400 rounded-full flex items-center justify-center">
+              <div className="w-7 h-7 bg-[var(--teal-soft)] text-[var(--teal)] rounded-full flex items-center justify-center">
                 <CheckIcon size={14} />
               </div>
               <h3 className="text-[15px] font-medium text-white">{t.fit.yes.title}</h3>
@@ -687,7 +779,7 @@ function Fit({ t }) {
             <ul className="space-y-3.5">
               {t.fit.yes.items.map((item, i) => (
                 <li key={i} className="flex gap-3 text-[14px] text-white/75 leading-relaxed">
-                  <span className="text-emerald-400 mt-1 flex-shrink-0">
+                  <span className="text-[var(--teal)] mt-1 flex-shrink-0">
                     <CheckIcon size={14} />
                   </span>
                   <span>{item}</span>
@@ -722,15 +814,15 @@ function Fit({ t }) {
 function Method({ t }) {
   return (
     <section id="method" className="py-24 px-6 lg:px-8 border-t border-white/10">
-      <div className="max-w-6xl mx-auto" data-reveal>
+      <div className="max-w-6xl mx-auto">
         <SectionHeader title={t.method.title} subtitle={t.method.subtitle} />
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {t.method.steps.map((step, i) => (
             <div key={i} className="relative">
-              <div className="text-[11px] font-medium text-violet-300/80 uppercase tracking-[0.12em] mb-3">
+              <div className="text-[13px] font-medium text-[var(--teal)] mb-3">
                 {step.duration}
               </div>
-              <div className="text-[40px] font-semibold text-white/80 leading-none mb-4 tabular-nums">
+              <div className="font-display text-[40px] font-semibold text-white/80 leading-none mb-4 tabular-nums">
                 {'0' + (i + 1)}
               </div>
               <div className="w-8 h-px bg-white/15 mb-4"></div>
@@ -747,14 +839,11 @@ function Method({ t }) {
 function Services({ t }) {
   return (
     <section id="services" className="py-24 px-6 lg:px-8 border-t border-white/10">
-      <div className="max-w-6xl mx-auto" data-reveal>
+      <div className="max-w-6xl mx-auto">
         <SectionHeader title={t.services.title} subtitle={t.services.subtitle} />
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {t.services.items.map((service, i) => (
-            <div key={i} className="bg-white/[0.03] border border-white/10 rounded-xl p-7 hover:bg-white/[0.05] hover:border-white/20 hover:-translate-y-1 transition-all duration-300">
-              <div className="text-[12px] font-medium text-white/30 tabular-nums mb-4">
-                {'0' + (i + 1)}
-              </div>
+            <div key={i} className="bg-white/[0.03] border border-white/10 rounded-xl p-7">
               <h3 className="text-[16px] font-medium text-white mb-3">{service.title}</h3>
               <p className="text-[14px] text-white/60 leading-relaxed">{service.text}</p>
             </div>
@@ -768,27 +857,41 @@ function Services({ t }) {
 function About({ t }) {
   return (
     <section id="about" className="py-24 px-6 lg:px-8 border-t border-white/10">
-      <div className="max-w-3xl mx-auto" data-reveal>
-        <h2 className="text-3xl sm:text-4xl font-semibold tracking-tight text-white mb-8">
-          {t.about.title}
-        </h2>
-        <p className="text-[17px] text-white/70 leading-relaxed mb-8">
-          {t.about.body}
-        </p>
-        {t.about.proof && (
-          <p className="text-[15px] text-white/60 leading-relaxed mb-10 pl-4 border-l-2 border-white/20">
-            {t.about.proof}
+      <div className="max-w-6xl mx-auto grid md:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] gap-12 lg:gap-20 items-center">
+        <picture className="block max-w-sm md:max-w-none">
+          <source srcSet={portraitWebp} type="image/webp" />
+          <img
+            src={portraitJpg}
+            alt={t.about.photoAlt}
+            width="720"
+            height="900"
+            loading="lazy"
+            decoding="async"
+            className="w-full h-auto rounded-2xl"
+          />
+        </picture>
+        <div>
+          <h2 className="text-3xl sm:text-4xl font-semibold text-white mb-8">
+            {t.about.title}
+          </h2>
+          <p className="text-[17px] text-white/70 leading-relaxed mb-8 max-w-xl">
+            {t.about.body}
           </p>
-        )}
-        <div className="flex flex-wrap items-center gap-6 pt-8 border-t border-white/10">
-          <div>
-            <div className="text-[14px] font-medium text-white">{t.about.signature}</div>
-            <div className="text-[13px] text-white/50 mt-1">{t.about.location}</div>
+          {t.about.proof && (
+            <p className="text-[15px] text-white/60 leading-relaxed mb-10 pl-4 border-l-2 border-[var(--teal)] max-w-xl">
+              {t.about.proof}
+            </p>
+          )}
+          <div className="flex flex-wrap items-center gap-6 pt-8 border-t border-white/10 max-w-xl">
+            <div>
+              <div className="text-[14px] font-medium text-white">{t.about.signature}</div>
+              <div className="text-[13px] text-white/50 mt-1">{t.about.location}</div>
+            </div>
+            <a href={LINKEDIN} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-4 py-2 text-[13px] font-medium text-white border border-white/15 rounded-md hover:bg-white/5 hover:border-white/30 transition-colors ml-auto">
+              {t.about.linkedin}
+              <ArrowIcon size={12} />
+            </a>
           </div>
-          <a href={LINKEDIN} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-4 py-2 text-[13px] font-medium text-white border border-white/15 rounded-md hover:bg-white/5 hover:border-white/30 transition-colors ml-auto">
-            {t.about.linkedin}
-            <ArrowIcon size={12} />
-          </a>
         </div>
       </div>
     </section>
@@ -875,7 +978,7 @@ function ContactForm({ t, lang, onOpenPrivacy }) {
   if (status === 'success') {
     return (
       <div className="bg-white/[0.03] border border-white/10 rounded-xl p-8 text-center">
-        <div className="w-10 h-10 mx-auto mb-4 bg-emerald-400/10 text-emerald-400 rounded-full flex items-center justify-center">
+        <div className="w-10 h-10 mx-auto mb-4 bg-[var(--teal-soft)] text-[var(--teal)] rounded-full flex items-center justify-center">
           <CheckIcon size={18} />
         </div>
         <p className="text-[16px] font-medium text-white">{t.contact.success}</p>
@@ -1019,7 +1122,7 @@ function ContactForm({ t, lang, onOpenPrivacy }) {
 function Contact({ t, lang, onOpenPrivacy }) {
   return (
     <section id="contact" className="py-24 px-6 lg:px-8 border-t border-white/10">
-      <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start" data-reveal>
+      <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start">
         <div>
           <h2 className="text-3xl sm:text-4xl font-semibold text-white tracking-tight">
             {t.contact.title}
@@ -1076,8 +1179,8 @@ function Contact({ t, lang, onOpenPrivacy }) {
 function FinalCTA({ t }) {
   return (
     <section className="py-32 px-6 lg:px-8 border-t border-white/10 relative overflow-hidden">
-      <div className="absolute inset-0 -z-10 bg-gradient-to-t from-violet-500/10 to-transparent" />
-      <div className="max-w-3xl mx-auto text-center" data-reveal>
+      <div className="absolute inset-0 -z-10 bg-gradient-to-t from-[var(--teal-soft)] to-transparent" />
+      <div className="max-w-3xl mx-auto text-center">
         <h2 className="text-4xl sm:text-5xl font-semibold leading-[1.1] tracking-tight text-white">
           {t.finalCta.title}
         </h2>
@@ -1191,22 +1294,6 @@ function HomePage() {
   const [lang, setLang] = useLang()
   const [privacyOpen, setPrivacyOpen] = useState(false)
 
-  useEffect(() => {
-    const els = document.querySelectorAll('[data-reveal]')
-    const io = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('reveal-visible')
-            io.unobserve(entry.target)
-          }
-        })
-      },
-      { rootMargin: '0px 0px -8% 0px' }
-    )
-    els.forEach((el) => io.observe(el))
-    return () => io.disconnect()
-  }, [])
 
   const t = content[lang]
   const openPrivacy = () => setPrivacyOpen(true)
@@ -1217,6 +1304,7 @@ function HomePage() {
       <Navbar lang={lang} setLang={setLang} t={t} />
       <main>
         <Hero t={t} />
+        <Stack t={t} />
         <Pains t={t} />
         <AuditCTA t={t} />
         <Fit t={t} />
