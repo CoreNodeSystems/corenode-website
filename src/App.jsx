@@ -54,14 +54,41 @@ const content = {
       proofRating: '5,0',
       proofRatingLabel: 'sur Google, 3 avis',
       flow: {
-        caption: 'Exemple de flux pour une entreprise de services terrain',
-        steps: [
-          { title: 'Appel du client', text: 'Fiche client créée dans le CRM', tool: 'Zoho CRM' },
-          { title: 'Bon de travail', text: "Généré avec l'adresse et le problème", tool: 'Zoho FSM' },
-          { title: 'Dispatch', text: 'Technicien proposé selon la distance et l’horaire', tool: 'n8n + Google Maps' },
-          { title: 'Facture', text: 'Envoyée dès que le travail est signé', tool: 'QuickBooks' },
+        label: 'Exemples de flux automatisés',
+        prev: 'Exemple précédent',
+        next: 'Exemple suivant',
+        examples: [
+          {
+            name: 'Services terrain',
+            steps: [
+              { title: 'Appel du client', text: 'Fiche client créée dans le CRM', tool: 'Zoho CRM' },
+              { title: 'Bon de travail', text: "Généré avec l'adresse et le problème", tool: 'Zoho FSM' },
+              { title: 'Dispatch', text: 'Technicien proposé selon la distance et l’horaire', tool: 'n8n + Google Maps' },
+              { title: 'Facture', text: 'Envoyée dès que le travail est signé', tool: 'QuickBooks' },
+            ],
+            result: 'Information tapée une seule fois',
+          },
+          {
+            name: 'Soumissions',
+            steps: [
+              { title: 'Demande sur ton site', text: 'Le prospect est ajouté au CRM avec ses besoins', tool: 'HubSpot' },
+              { title: 'Soumission', text: 'Préparée à partir de ton gabarit, prête à envoyer', tool: 'PandaDoc' },
+              { title: 'Relance', text: 'Rappel automatique si rien n’est signé après 3 jours', tool: 'n8n + Gmail' },
+              { title: 'Signature', text: 'Le projet est créé et planifié pour ton équipe', tool: 'Airtable' },
+            ],
+            result: 'Aucune soumission oubliée',
+          },
+          {
+            name: 'Demandes entrantes',
+            steps: [
+              { title: 'Courriel ou formulaire', text: 'Toutes les demandes arrivent au même endroit', tool: 'Microsoft 365' },
+              { title: 'Tri par l’IA', text: 'Urgence et type de service identifiés', tool: 'Claude' },
+              { title: 'Réponse', text: 'Brouillon rédigé, tu approuves en un clic', tool: 'Outlook' },
+              { title: 'Suivi', text: 'Tâche assignée à la bonne personne', tool: 'Zoho CRM' },
+            ],
+            result: 'Aucune demande qui dort dans la boîte',
+          },
         ],
-        result: 'Information tapée une seule fois',
       },
     },
     stack: {
@@ -228,14 +255,41 @@ const content = {
       proofRating: '5.0',
       proofRatingLabel: 'on Google, 3 reviews',
       flow: {
-        caption: 'Example flow for a field service business',
-        steps: [
-          { title: 'Customer call', text: 'Customer record created in the CRM', tool: 'Zoho CRM' },
-          { title: 'Work order', text: 'Generated with the address and the problem', tool: 'Zoho FSM' },
-          { title: 'Dispatch', text: 'Technician suggested by distance and schedule', tool: 'n8n + Google Maps' },
-          { title: 'Invoice', text: 'Sent as soon as the job is signed off', tool: 'QuickBooks' },
+        label: 'Examples of automated flows',
+        prev: 'Previous example',
+        next: 'Next example',
+        examples: [
+          {
+            name: 'Field service',
+            steps: [
+              { title: 'Customer call', text: 'Customer record created in the CRM', tool: 'Zoho CRM' },
+              { title: 'Work order', text: 'Generated with the address and the problem', tool: 'Zoho FSM' },
+              { title: 'Dispatch', text: 'Technician suggested by distance and schedule', tool: 'n8n + Google Maps' },
+              { title: 'Invoice', text: 'Sent as soon as the job is signed off', tool: 'QuickBooks' },
+            ],
+            result: 'Information typed only once',
+          },
+          {
+            name: 'Quotes',
+            steps: [
+              { title: 'Request on your site', text: 'The lead is added to the CRM with their needs', tool: 'HubSpot' },
+              { title: 'Quote', text: 'Built from your template, ready to send', tool: 'PandaDoc' },
+              { title: 'Follow-up', text: 'Automatic reminder if nothing is signed after 3 days', tool: 'n8n + Gmail' },
+              { title: 'Signature', text: 'The project is created and scheduled for your team', tool: 'Airtable' },
+            ],
+            result: 'No quote forgotten',
+          },
+          {
+            name: 'Incoming requests',
+            steps: [
+              { title: 'Email or form', text: 'Every request lands in one place', tool: 'Microsoft 365' },
+              { title: 'AI triage', text: 'Urgency and type of service identified', tool: 'Claude' },
+              { title: 'Reply', text: 'Draft written, you approve in one click', tool: 'Outlook' },
+              { title: 'Follow-through', text: 'Task assigned to the right person', tool: 'Zoho CRM' },
+            ],
+            result: 'No request left sitting in the inbox',
+          },
         ],
-        result: 'Information typed only once',
       },
     },
     stack: {
@@ -596,7 +650,7 @@ const GOOGLE_PROFILE = 'https://www.google.com/maps/place/?q=place_id:ChIJSWV3DM
 function Hero({ t }) {
   return (
     <section id="top" className="relative pt-32 pb-20 lg:pt-40 lg:pb-24 px-6 lg:px-8 overflow-hidden">
-      <div className="max-w-6xl mx-auto grid lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] gap-14 lg:gap-16 items-center">
+      <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] gap-14 lg:gap-16 items-center">
         <div>
           <p className="inline-flex items-center gap-2 text-[13px] text-white/60 mb-7">
             <span className="w-1.5 h-1.5 rounded-full bg-[var(--teal)]" aria-hidden="true"></span>
@@ -645,29 +699,86 @@ function Hero({ t }) {
   )
 }
 
-// Un bon de travail qui traverse les outils, joué une seule fois au chargement.
-function HeroFlow({ flow }) {
+function ChevronIcon({ dir = 'right', size = 16 }) {
   return (
-    <figure className="relative rounded-2xl border border-white/10 bg-[var(--panel)] p-6 sm:p-8">
-      <ol className="relative space-y-7">
-        <span className="absolute left-[5px] top-2 bottom-2 w-px bg-white/10" aria-hidden="true">
-          <span className="flow-rail-fill absolute inset-0 bg-[var(--teal)]"></span>
-        </span>
-        {flow.steps.map((step, i) => (
-          <li key={step.title} className="flow-step relative pl-8" style={{ '--i': i }}>
-            <span className="flow-dot absolute left-0 top-1.5 w-[11px] h-[11px] rounded-full" aria-hidden="true"></span>
-            <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-              <p className="text-[15px] font-medium text-white">{step.title}</p>
-              <p className="text-[12px] text-[var(--teal)]">{step.tool}</p>
-            </div>
-            <p className="mt-1 text-[14px] text-white/55 leading-relaxed">{step.text}</p>
-          </li>
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      {dir === 'left' ? <polyline points="15 18 9 12 15 6" /> : <polyline points="9 18 15 12 9 6" />}
+    </svg>
+  )
+}
+
+// Exemples de flux : un dossier traverse les outils étape par étape. Changer
+// d'exemple remonte la liste (key), ce qui rejoue l'animation CSS.
+function HeroFlow({ flow }) {
+  const [index, setIndex] = useState(0)
+  const total = flow.examples.length
+  const example = flow.examples[index]
+  const go = (delta) => setIndex((i) => (i + delta + total) % total)
+
+  return (
+    <figure className="relative min-w-0 rounded-2xl border border-white/10 bg-[var(--panel)] p-6 sm:p-8" aria-label={flow.label}>
+      <div
+        className="-mx-2 mb-7 flex gap-1.5 overflow-x-auto px-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        role="tablist"
+        aria-label={flow.label}
+      >
+        {flow.examples.map((ex, i) => (
+          <button
+            key={ex.name}
+            type="button"
+            role="tab"
+            aria-selected={i === index}
+            onClick={() => setIndex(i)}
+            className={`shrink-0 whitespace-nowrap px-3 py-1.5 rounded-full text-[12px] font-medium transition-colors ${
+              i === index ? 'bg-[var(--teal-soft)] text-white' : 'text-white/50 hover:text-white'
+            }`}
+          >
+            {ex.name}
+          </button>
         ))}
-      </ol>
-      <p className="flow-result mt-8 rounded-lg bg-[var(--teal-soft)] px-4 py-3 text-[14px] font-medium text-white">
-        {flow.result}
-      </p>
-      <figcaption className="mt-4 text-[12px] text-white/40">{flow.caption}</figcaption>
+      </div>
+
+      <div key={index} aria-live="polite">
+        <ol className="relative space-y-7">
+          <span className="absolute left-[5px] top-2 bottom-2 w-px bg-white/10" aria-hidden="true">
+            <span className="flow-rail-fill absolute inset-0 bg-[var(--teal)]"></span>
+          </span>
+          {example.steps.map((step, i) => (
+            <li key={step.title} className="flow-step relative pl-8" style={{ '--i': i }}>
+              <span className="flow-dot absolute left-0 top-1.5 w-[11px] h-[11px] rounded-full" aria-hidden="true"></span>
+              <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+                <p className="text-[15px] font-medium text-white">{step.title}</p>
+                <p className="text-[12px] text-[var(--teal)]">{step.tool}</p>
+              </div>
+              <p className="mt-1 text-[14px] text-white/55 leading-relaxed">{step.text}</p>
+            </li>
+          ))}
+        </ol>
+        <p className="flow-result mt-8 rounded-lg bg-[var(--teal-soft)] px-4 py-3 text-[14px] font-medium text-white">
+          {example.result}
+        </p>
+      </div>
+      <figcaption className="mt-5 flex items-center justify-between">
+        <span className="text-[12px] text-white/40 tabular-nums">{index + 1} / {total}</span>
+        <span className="flex gap-2">
+          <button
+            type="button"
+            onClick={() => go(-1)}
+            aria-label={flow.prev}
+            className="w-9 h-9 inline-flex items-center justify-center rounded-full border border-white/15 text-white/70 hover:text-white hover:border-white/40 transition-colors"
+          >
+            <ChevronIcon dir="left" />
+          </button>
+          <button
+            type="button"
+            onClick={() => go(1)}
+            aria-label={flow.next}
+            className="w-9 h-9 inline-flex items-center justify-center rounded-full border border-white/15 text-white/70 hover:text-white hover:border-white/40 transition-colors"
+          >
+            <ChevronIcon dir="right" />
+          </button>
+        </span>
+      </figcaption>
     </figure>
   )
 }
@@ -857,8 +968,8 @@ function Services({ t }) {
 function About({ t }) {
   return (
     <section id="about" className="py-24 px-6 lg:px-8 border-t border-white/10">
-      <div className="max-w-6xl mx-auto grid md:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] gap-12 lg:gap-20 items-center">
-        <picture className="block max-w-sm md:max-w-none">
+      <div className="max-w-5xl mx-auto grid md:grid-cols-[260px_minmax(0,1fr)] lg:grid-cols-[300px_minmax(0,1fr)] gap-10 lg:gap-16 items-center">
+        <picture className="block w-48 sm:w-60 md:w-full">
           <source srcSet={portraitWebp} type="image/webp" />
           <img
             src={portraitJpg}
