@@ -22,7 +22,8 @@
       vercel.json réécrit toutes les routes vers ce fichier, donc une canonique
       figée déclare à Google que /audit est un doublon de l'accueil. C'était la
       cause de l'état « Détectée, actuellement non indexée » relevé le 3 août 2026.
-      La canonique est émise par route dans Seo.jsx.
+      La canonique est écrite par page au build (scripts/prerender.mjs), puis
+      tenue à jour par Seo.jsx dans le navigateur.
     -->
     <title>Automatisation PME Québec. CRM et outils connectés | CoreNode Systems</title>
     <meta

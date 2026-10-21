@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import Seo from './seo/Seo.jsx'
+import useLang from './useLang.js'
 import { PAGES } from './seo/siteMeta.js'
 import logoImg from './assets/logo.png'
 
@@ -51,6 +52,25 @@ const content = {
     ctaButton: 'Réserver mon appel',
     ctaReassurance: 'Appel sans engagement. Réponse sous 24 h.',
     rights: '© 2026 CoreNode Systems. Québec, Canada.',
+    lookTitle: 'Ce que le diagnostic regarde',
+    look: [
+      { title: 'La ressaisie', text: "Les endroits où la même information (client, adresse, heures, montant) est tapée plus d'une fois d'un outil à l'autre." },
+      { title: 'Les trous entre les étapes', text: "Ce qui se perd entre l'appel du client, le bon de travail, le dispatch et la facture." },
+      { title: 'Ce qui peut déjà se connecter', text: "Ce que tes outils savent faire ensemble sans rien acheter de plus, et ce qui demande vraiment une intégration." },
+    ],
+    howTitle: 'Comment ça marche',
+    how: [
+      'Tu nommes les 3 outils que ton équipe ouvre tous les jours.',
+      "Le diagnostic regarde comment ces outils se parlent, ou pas, et où l'information se perd entre eux.",
+      "Ton verdict s'affiche directement sur cette page. Si tu veux aller plus loin, tu réserves 30 minutes. Sinon, ça s'arrête là.",
+    ],
+    faqTitle: 'Questions fréquentes',
+    faq: [
+      { q: "C'est vraiment gratuit?", a: "Oui. Pas de carte, pas d'appel obligatoire. Tu reçois ton verdict et tu décides ensuite si tu veux en parler." },
+      { q: "Pour quel genre d'entreprise?", a: "Surtout les PME québécoises de 10 à 50 employés en services terrain : plomberie, électricité, entretien, construction. Le diagnostic fonctionne pour d'autres secteurs, mais c'est là qu'il est le plus précis." },
+      { q: 'Est-ce que je vais devoir changer de logiciels?', a: "Non. Le but est de faire circuler l'information entre les outils que tu as déjà. On remplace un outil seulement s'il bloque vraiment." },
+      { q: 'Qui est derrière CoreNode Systems?', a: "William Fomete, consultant en automatisation et en intégration d'outils, basé au Québec. C'est lui que tu rencontres si tu réserves un appel, et lui qui fait la mise en place." },
+    ],
   },
   en: {
     back: '← Back to the site',
@@ -82,6 +102,25 @@ const content = {
     ctaButton: 'Book my call',
     ctaReassurance: 'No-commitment call. Reply within 24 h.',
     rights: '© 2026 CoreNode Systems. Quebec, Canada.',
+    lookTitle: 'What the diagnosis looks at',
+    look: [
+      { title: 'Double entry', text: 'Where the same information (customer, address, hours, amount) gets typed more than once from one tool to the next.' },
+      { title: 'Gaps between steps', text: 'What gets lost between the customer call, the work order, dispatch and the invoice.' },
+      { title: 'What can already connect', text: 'What your tools can do together without buying anything new, and what really needs an integration.' },
+    ],
+    howTitle: 'How it works',
+    how: [
+      'You name the 3 tools your team opens every day.',
+      'The diagnosis looks at how those tools talk to each other, or don’t, and where information falls through the cracks.',
+      'Your verdict shows up right on this page. If you want to go further, you book 30 minutes. If not, that’s it.',
+    ],
+    faqTitle: 'Frequently asked questions',
+    faq: [
+      { q: 'Is it really free?', a: 'Yes. No card, no mandatory call. You get your verdict and then decide whether you want to talk.' },
+      { q: 'What kind of business is it for?', a: 'Mostly Quebec SMBs with 10 to 50 employees in field services: plumbing, electrical, maintenance, construction. It works for other sectors too, but that is where it is most precise.' },
+      { q: 'Will I have to switch software?', a: 'No. The goal is to get information flowing between the tools you already have. A tool only gets replaced if it is truly in the way.' },
+      { q: 'Who is behind CoreNode Systems?', a: 'William Fomete, an automation and integration consultant based in Quebec. He is the one you meet if you book a call, and the one who does the setup.' },
+    ],
   },
 }
 function ArrowIcon({ size = 14 }) {
@@ -142,10 +181,7 @@ function extractResult(data) {
 }
 
 export default function AuditPage() {
-  const [lang, setLang] = useState(() => {
-    const stored = localStorage.getItem('corenode-lang')
-    return stored === 'fr' || stored === 'en' ? stored : 'fr'
-  })
+  const [lang, setLang] = useLang()
   const [status, setStatus] = useState('idle') // idle | loading | done | error
   const [result, setResult] = useState(null)
   const [errors, setErrors] = useState({})
@@ -153,11 +189,6 @@ export default function AuditPage() {
   const [form, setForm] = useState({ outil1: '', outil2: '', outil3: '', email: '', site_web: '' })
   const lastAttempt = useRef(0)
   const attempts = useRef(0)
-
-  useEffect(() => {
-    localStorage.setItem('corenode-lang', lang)
-    document.documentElement.lang = lang
-  }, [lang])
 
   // Préremplissage depuis un lien partagé en commentaire (?outil1=...&outil2=...&outil3=...)
   useEffect(() => {
@@ -424,6 +455,53 @@ export default function AuditPage() {
               </div>
             </div>
           )}
+
+          <section className="mt-20 pt-12 border-t border-white/10">
+            <h2 className="text-2xl font-semibold tracking-tight text-white" style={HEADING_FONT}>
+              {t.lookTitle}
+            </h2>
+            <div className="mt-6 grid gap-4 sm:grid-cols-3">
+              {t.look.map((item) => (
+                <div key={item.title} className="rounded-lg border border-white/10 bg-white/[0.02] p-5">
+                  <h3 className="text-[15px] font-medium text-white">{item.title}</h3>
+                  <p className="mt-2 text-[14px] text-white/60 leading-relaxed">{item.text}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          <section className="mt-14">
+            <h2 className="text-2xl font-semibold tracking-tight text-white" style={HEADING_FONT}>
+              {t.howTitle}
+            </h2>
+            <ol className="mt-6 space-y-4">
+              {t.how.map((step, i) => (
+                <li key={i} className="flex gap-4">
+                  <span
+                    className="shrink-0 w-7 h-7 rounded-full flex items-center justify-center text-[13px] font-medium text-black"
+                    style={{ backgroundColor: TEAL }}
+                  >
+                    {i + 1}
+                  </span>
+                  <p className="text-[15px] text-white/70 leading-relaxed pt-0.5">{step}</p>
+                </li>
+              ))}
+            </ol>
+          </section>
+
+          <section className="mt-14">
+            <h2 className="text-2xl font-semibold tracking-tight text-white" style={HEADING_FONT}>
+              {t.faqTitle}
+            </h2>
+            <dl className="mt-6 divide-y divide-white/10 border-y border-white/10">
+              {t.faq.map((item) => (
+                <div key={item.q} className="py-5">
+                  <dt className="text-[15px] font-medium text-white">{item.q}</dt>
+                  <dd className="mt-2 text-[14px] text-white/60 leading-relaxed">{item.a}</dd>
+                </div>
+              ))}
+            </dl>
+          </section>
         </div>
       </main>
 
