@@ -51,8 +51,8 @@ const content = {
       reassurance: 'Appel sans engagement. Réponse sous 24 h.',
       proofHours: '40 h',
       proofHoursLabel: 'de travail manuel évitées chaque semaine pour mon dernier client',
-      proofRating: '5,0',
-      proofRatingLabel: 'sur Google, 3 avis',
+      ratingValue: (r) => r.toFixed(1).replace('.', ','),
+      ratingLabel: (n) => `sur Google, ${n} avis`,
       flow: {
         label: 'Exemples de flux automatisés',
         prev: 'Exemple précédent',
@@ -117,7 +117,7 @@ const content = {
         title: "C'est pour toi si",
         items: [
           'Tu diriges une PME québécoise en services terrain, construction ou métiers spécialisés',
-          'Tu as entre 5 et 50 employés et tes opérations sont devenues le goulot',
+          'Tu as entre 10 et 50 employés et tes opérations sont devenues le goulot',
           'Tu utilises déjà des outils (CRM, dispatch, facturation) mais ils ne se parlent pas',
           'Tu veux un système documenté que ton équipe peut opérer sans dépendre du consultant',
         ],
@@ -144,11 +144,12 @@ const content = {
     },
     services: {
       title: "Ce qu'on construit ensemble",
-      subtitle: 'Trois piliers, une architecture cohérente.',
+      subtitle: 'Quatre piliers, une architecture cohérente.',
       items: [
         { title: 'Automatisation des opérations', text: "Tes outils existants, enfin connectés. J'orchestre tes systèmes avec n8n pour éliminer les ressaisies et les pertes d'information entre tes plateformes." },
         { title: 'Infrastructure de gestion', text: "Une base de données structurée, un CRM connecté, des tableaux de bord en temps réel. Une seule source de vérité pour piloter ton entreprise." },
         { title: 'Systèmes de terrain', text: "Dispatch automatisé, suivi des techniciens, synchronisation bureau-terrain, rappels et confirmations automatiques. Le terrain et le bureau enfin alignés." },
+        { title: 'IA intégrée à tes processus', text: "Tri des demandes, rédaction de réponses, lecture de factures et de bons de commande. L'IA fait le travail répétitif, une personne de ton équipe garde la décision." },
       ],
     },
     about: {
@@ -173,8 +174,8 @@ const content = {
       home: 'Accueil',
     },
     contact: {
-      title: 'Parlons de votre projet',
-      intro: 'Pas encore prêt à réserver un appel ? Décris-moi ton projet, je te réponds en 24h.',
+      title: 'Parlons de ton projet',
+      intro: 'Pas encore prêt à réserver un appel ? Décris-moi ton projet, je te réponds en 24 h.',
       reassuranceTitle: 'À quoi t\u2019attendre',
       reassurance: [
         { title: 'Réponse sous 24 h', text: 'Pas de file d\u2019attente, pas de robot. Je lis ta demande et je te reviens.' },
@@ -186,7 +187,7 @@ const content = {
       linkedinLabel: 'LinkedIn',
       fields: {
         nom: 'Nom complet',
-        email: 'Email',
+        email: 'Courriel',
         entreprise: 'Entreprise',
         entrepriseOptional: '(optionnel)',
         secteur: "Secteur d'activité",
@@ -196,7 +197,7 @@ const content = {
       },
       submit: 'Envoyer ma demande',
       submitting: 'Envoi en cours…',
-      success: 'Merci ! Je te réponds sous 24h.',
+      success: 'Merci ! Je te réponds sous 24 h.',
       error: "Une erreur s'est produite. Réessaie ou écris-moi directement.",
       retry: 'Réessayer',
       emailInvalid: 'Entre une adresse courriel valide.',
@@ -252,8 +253,8 @@ const content = {
       reassurance: 'No-commitment call. Reply within 24 h.',
       proofHours: '40 h',
       proofHoursLabel: 'of manual work avoided every week for my latest client',
-      proofRating: '5.0',
-      proofRatingLabel: 'on Google, 3 reviews',
+      ratingValue: (r) => r.toFixed(1),
+      ratingLabel: (n) => `on Google, ${n} review${n === 1 ? '' : 's'}`,
       flow: {
         label: 'Examples of automated flows',
         prev: 'Previous example',
@@ -318,7 +319,7 @@ const content = {
         title: 'This is for you if',
         items: [
           'You run a Quebec SMB in field service, construction or skilled trades',
-          'You have 5 to 50 employees and operations have become the bottleneck',
+          'You have 10 to 50 employees and operations have become the bottleneck',
           "You already use tools (CRM, dispatch, billing) but they don't talk to each other",
           'You want a documented system your team can operate without depending on the consultant',
         ],
@@ -345,11 +346,12 @@ const content = {
     },
     services: {
       title: 'What we build together',
-      subtitle: 'Three pillars, one coherent architecture.',
+      subtitle: 'Four pillars, one coherent architecture.',
       items: [
         { title: 'Operations automation', text: "Your existing tools, finally connected. I orchestrate your systems with n8n to eliminate re-entry and information loss between your platforms." },
         { title: 'Management infrastructure', text: "A structured database, a connected CRM, real-time dashboards. A single source of truth to run your business." },
         { title: 'Field systems', text: "Automated dispatch, technician tracking, office-field sync, automatic reminders and confirmations. Field and office finally aligned." },
+        { title: 'AI built into your processes', text: "Sorting requests, drafting replies, reading invoices and purchase orders. AI handles the repetitive work, someone on your team keeps the final say." },
       ],
     },
     about: {
@@ -647,7 +649,31 @@ function Navbar({ lang, setLang, t }) {
 
 const GOOGLE_PROFILE = 'https://www.google.com/maps/place/?q=place_id:ChIJSWV3DMhRHCsR5zmth468YCA'
 
+// Valeurs de repli (HTML prérendu, ou si l'API est indisponible). La note réelle
+// arrive de /api/google-rating, qui interroge Google et met le résultat en cache 1 h.
+const RATING_FALLBACK = { rating: 5, count: 3 }
+
+function useGoogleRating() {
+  const [data, setData] = useState(RATING_FALLBACK)
+  useEffect(() => {
+    let cancelled = false
+    fetch('/api/google-rating')
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => {
+        if (!cancelled && d && typeof d.rating === 'number' && typeof d.count === 'number') {
+          setData({ rating: d.rating, count: d.count })
+        }
+      })
+      .catch(() => {})
+    return () => {
+      cancelled = true
+    }
+  }, [])
+  return data
+}
+
 function Hero({ t }) {
+  const google = useGoogleRating()
   return (
     <section id="top" className="relative pt-32 pb-20 lg:pt-40 lg:pb-24 px-6 lg:px-8 overflow-hidden">
       <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] gap-14 lg:gap-16 items-center">
@@ -679,7 +705,7 @@ function Hero({ t }) {
           <dl className="mt-12 pt-8 border-t border-white/10 grid grid-cols-[auto_1fr] sm:grid-cols-[auto_1fr_auto_1fr] gap-x-4 gap-y-5 items-center max-w-xl">
             <dt className="font-display text-3xl font-semibold text-white">{t.hero.proofHours}</dt>
             <dd className="text-[13px] text-white/55 leading-snug">{t.hero.proofHoursLabel}</dd>
-            <dt className="font-display text-3xl font-semibold text-white">{t.hero.proofRating}</dt>
+            <dt className="font-display text-3xl font-semibold text-white">{t.hero.ratingValue(google.rating)}</dt>
             <dd className="text-[13px] leading-snug">
               <a
                 href={GOOGLE_PROFILE}
@@ -687,7 +713,7 @@ function Hero({ t }) {
                 rel="noopener noreferrer"
                 className="text-white/55 hover:text-white underline underline-offset-4 decoration-white/20 hover:decoration-white/60 transition-colors"
               >
-                {t.hero.proofRatingLabel}
+                {t.hero.ratingLabel(google.count)}
               </a>
             </dd>
           </dl>
@@ -834,12 +860,12 @@ function SectionHeader({ title, subtitle }) {
 
 function Pains({ t }) {
   return (
-    <section className="py-24 px-6 lg:px-8 border-t border-white/10">
+    <section className="py-24 px-6 lg:px-8">
       <div className="max-w-6xl mx-auto">
         <SectionHeader title={t.pains.title} subtitle={t.pains.subtitle} />
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-10">
           {t.pains.items.map((pain, i) => (
-            <div key={i} className="bg-white/[0.03] border border-white/10 rounded-xl p-7">
+            <div key={i} className="border-l-2 border-[var(--teal)] pl-6">
               <h3 className="text-[17px] font-medium text-white mb-2">
                 {pain.title}
               </h3>
@@ -952,7 +978,7 @@ function Services({ t }) {
     <section id="services" className="py-24 px-6 lg:px-8 border-t border-white/10">
       <div className="max-w-6xl mx-auto">
         <SectionHeader title={t.services.title} subtitle={t.services.subtitle} />
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {t.services.items.map((service, i) => (
             <div key={i} className="bg-white/[0.03] border border-white/10 rounded-xl p-7">
               <h3 className="text-[16px] font-medium text-white mb-3">{service.title}</h3>
