@@ -9,12 +9,14 @@
 //
 // Pour chaque entrée de LIVE_PAGE_KEYS (src/seo/siteMeta.js), ce script :
 //   - rend la page en HTML (texte, H1, liens) dans <div id="root">;
-//   - écrit dans le <head> le titre, la description, la canonique et les
-//     balises Open Graph propres à la page;
-//   - génère public/sitemap.xml à jour dans dist/.
+//   - écrit dans le <head> le titre, la description, la canonique, l'image de
+//     partage et les balises Open Graph propres à la page;
+//   - génère sitemap.xml dans dist/, avec la date lastmod de chaque page.
+// Il génère aussi dist/404.html (page d'erreur, noindex, hors sitemap).
 //
 // Sortie : dist/index.html (accueil) et dist/<chemin>.html (ex. audit.html),
-// servis sans extension grâce à "cleanUrls" dans vercel.json.
+// servis sans extension grâce à "cleanUrls" dans vercel.json. Vercel sert
+// dist/404.html pour toute adresse inconnue, avec le code 404.
 
 import fs from 'node:fs'
 import path from 'node:path'
@@ -24,9 +26,15 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const distDir = path.join(root, 'dist')
 const serverEntry = path.join(root, 'dist-ssr', 'entry-server.js')
 
-const { render, PAGES, LIVE_PAGE_KEYS, canonicalUrl, SITE_URL } = await import(
-  pathToFileURL(serverEntry).href
-)
+const {
+  render,
+  PAGES,
+  LIVE_PAGE_KEYS,
+  canonicalUrl,
+  SITE_URL,
+  DEFAULT_OG_IMAGE,
+  DEFAULT_OG_IMAGE_ALT,
+} = await import(pathToFileURL(serverEntry).href)
 
 const template = fs.readFileSync(path.join(distDir, 'index.html'), 'utf8')
 
@@ -48,7 +56,13 @@ function setMeta(html, key, keyValue, content) {
   return html.replace(re, `$1${escapeAttr(content)}$2`)
 }
 
-function buildPage(page) {
+const ogImage = DEFAULT_OG_IMAGE
+  ? DEFAULT_OG_IMAGE.startsWith('http')
+    ? DEFAULT_OG_IMAGE
+    : `${SITE_URL}${DEFAULT_OG_IMAGE}`
+  : null
+
+function buildPage(page, { outName } = {}) {
   const url = canonicalUrl(page.path)
   const appHtml = render(page.path)
   if (!appHtml || appHtml.length < 500) {
@@ -63,22 +77,34 @@ function buildPage(page) {
   html = setMeta(html, 'property', 'og:description', page.description)
   html = setMeta(html, 'name', 'twitter:title', page.title)
   html = setMeta(html, 'name', 'twitter:description', page.description)
+  if (ogImage) html = setMeta(html, 'name', 'twitter:card', 'summary_large_image')
 
-  // Canonique et og:url propres à chaque page, écrites dans le HTML servi.
-  // Seo.jsx met à jour ces mêmes balises (il les retrouve, il n'en ajoute pas).
-  const headTags = [
-    `<link rel="canonical" href="${escapeAttr(url)}" />`,
-    `<meta property="og:url" content="${escapeAttr(url)}" />`,
-  ].join('\n    ')
-  html = html.replace('</head>', `    ${headTags}\n  </head>`)
+  // Balises propres à chaque page, écrites dans le HTML servi. Seo.jsx met à
+  // jour ces mêmes balises (il les retrouve, il n'en ajoute pas).
+  const headTags = []
+  if (page.noindex) {
+    headTags.push('<meta name="robots" content="noindex, follow" />')
+  } else {
+    headTags.push(`<link rel="canonical" href="${escapeAttr(url)}" />`)
+    headTags.push(`<meta property="og:url" content="${escapeAttr(url)}" />`)
+  }
+  if (ogImage) {
+    headTags.push(`<meta property="og:image" content="${escapeAttr(ogImage)}" />`)
+    headTags.push('<meta property="og:image:width" content="1200" />')
+    headTags.push('<meta property="og:image:height" content="630" />')
+    headTags.push(`<meta property="og:image:alt" content="${escapeAttr(DEFAULT_OG_IMAGE_ALT)}" />`)
+    headTags.push(`<meta name="twitter:image" content="${escapeAttr(ogImage)}" />`)
+  }
+  html = html.replace('</head>', `    ${headTags.join('\n    ')}\n  </head>`)
 
   if (!html.includes('<div id="root"></div>')) {
     throw new Error('Conteneur <div id="root"></div> introuvable dans index.html')
   }
   html = html.replace('<div id="root"></div>', `<div id="root">${appHtml}</div>`)
 
-  const outFile =
-    page.path === '/'
+  const outFile = outName
+    ? path.join(distDir, outName)
+    : page.path === '/'
       ? path.join(distDir, 'index.html')
       : path.join(distDir, `${page.path.replace(/^\/+|\/+$/g, '')}.html`)
 
@@ -93,20 +119,25 @@ const pages = LIVE_PAGE_KEYS.map((key) => {
   return page
 })
 
-// L'accueil en dernier : son fichier remplace le gabarit index.html.
+// Page d'erreur d'abord (elle part aussi du gabarit), l'accueil en dernier :
+// son fichier remplace le gabarit index.html.
+if (PAGES.notFound) {
+  const { outFile } = buildPage(PAGES.notFound, { outName: '404.html' })
+  console.log(`prérendu : 404 -> ${path.relative(root, outFile)}`)
+}
 const ordered = [...pages.filter((p) => p.path !== '/'), ...pages.filter((p) => p.path === '/')]
 for (const page of ordered) {
   const { outFile } = buildPage(page)
   console.log(`prérendu : ${page.path} -> ${path.relative(root, outFile)}`)
 }
 
-// Sitemap régénéré à chaque build : lastmod = date du déploiement.
+// Sitemap : lastmod = date de dernière modification déclarée dans siteMeta.js.
 const today = new Date().toISOString().slice(0, 10)
 const urls = pages
   .map(
     (page) => `  <url>
     <loc>${canonicalUrl(page.path)}</loc>
-    <lastmod>${today}</lastmod>
+    <lastmod>${page.lastmod || today}</lastmod>
   </url>`
   )
   .join('\n')
@@ -118,4 +149,4 @@ ${urls}
 </urlset>
 `
 )
-console.log(`sitemap : ${pages.length} URL, lastmod ${today} (${SITE_URL})`)
+console.log(`sitemap : ${pages.length} URL (${SITE_URL})`)

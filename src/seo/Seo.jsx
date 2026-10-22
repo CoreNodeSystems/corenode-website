@@ -1,5 +1,7 @@
 // src/seo/Seo.jsx
-// Métadonnées par route pour un SPA React Router servi par un rewrite Vercel.
+// Métadonnées par route. Chaque page arrive déjà avec ses balises dans le HTML
+// prérendu (scripts/prerender.mjs) ; ce composant les garde à jour quand on
+// navigue d'une page à l'autre sans recharger.
 //
 // Pourquoi une mise à jour impérative plutôt que les métadonnées natives de
 // React 19 : index.html conserve un <title> et des <meta> de repli pour les
@@ -15,6 +17,7 @@ import {
   SITE_NAME,
   SITE_LOCALE,
   DEFAULT_OG_IMAGE,
+  DEFAULT_OG_IMAGE_ALT,
   canonicalUrl,
 } from './siteMeta'
 
@@ -59,9 +62,8 @@ export default function Seo({
 
     upsertMeta('meta[name="description"]', 'name', 'description', description)
 
-    // Canonique auto-référente. C'est la balise qui manquait par route et qui
-    // faisait passer /audit pour un doublon de l'accueil.
-    upsertLink('canonical', url)
+    // Canonique auto-référente (aucune sur une page d'erreur).
+    if (!noindex) upsertLink('canonical', url)
 
     upsertMeta('meta[property="og:title"]', 'property', 'og:title', title)
     upsertMeta('meta[property="og:description"]', 'property', 'og:description', description)
@@ -76,6 +78,7 @@ export default function Seo({
     if (image) {
       const absolute = image.startsWith('http') ? image : `${SITE_URL}${image}`
       upsertMeta('meta[property="og:image"]', 'property', 'og:image', absolute)
+      upsertMeta('meta[property="og:image:alt"]', 'property', 'og:image:alt', DEFAULT_OG_IMAGE_ALT)
       upsertMeta('meta[name="twitter:image"]', 'name', 'twitter:image', absolute)
       upsertMeta('meta[name="twitter:card"]', 'name', 'twitter:card', 'summary_large_image')
     }

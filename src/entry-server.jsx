@@ -9,7 +9,14 @@ import { renderToString } from 'react-dom/server'
 import { StaticRouter } from 'react-router-dom'
 import App from './App.jsx'
 
-export { PAGES, LIVE_PAGE_KEYS, canonicalUrl, SITE_URL } from './seo/siteMeta.js'
+export {
+  PAGES,
+  LIVE_PAGE_KEYS,
+  canonicalUrl,
+  SITE_URL,
+  DEFAULT_OG_IMAGE,
+  DEFAULT_OG_IMAGE_ALT,
+} from './seo/siteMeta.js'
 
 export function render(url) {
   return renderToString(

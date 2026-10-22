@@ -2,28 +2,25 @@
 <html lang="fr">
   <head>
     <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap"
-      rel="stylesheet"
-    />
+    <meta name="theme-color" content="#141416" />
 
     <!--
       Valeurs de repli servies aux agents qui n'exécutent pas le JavaScript
       (GPTBot, ClaudeBot, PerplexityBot, aperçus LinkedIn et Facebook).
       Le composant src/seo/Seo.jsx les remplace par route à l'exécution.
 
-      Ne PAS remettre ici de <link rel="canonical"> ni de <meta property="og:url">.
-      vercel.json réécrit toutes les routes vers ce fichier, donc une canonique
-      figée déclare à Google que /audit est un doublon de l'accueil. C'était la
-      cause de l'état « Détectée, actuellement non indexée » relevé le 3 août 2026.
-      La canonique est écrite par page au build (scripts/prerender.mjs), puis
-      tenue à jour par Seo.jsx dans le navigateur.
+      Ne PAS remettre ici de <link rel="canonical">, <meta property="og:url"> ni
+      <meta property="og:image"> : ce fichier sert de gabarit à toutes les pages.
+      Une canonique figée déclarait à Google que /audit était un doublon de
+      l'accueil (« Détectée, actuellement non indexée », août 2026). Ces balises
+      sont écrites par page au build (scripts/prerender.mjs), puis tenues à jour
+      par Seo.jsx dans le navigateur. Les polices sont auto-hébergées
+      (src/main.jsx) : aucun appel à Google Fonts.
     -->
     <title>Automatisation PME Québec. CRM et outils connectés | CoreNode Systems</title>
     <meta
@@ -55,36 +52,56 @@
         "@type": "ProfessionalService",
         "@id": "https://corenodesystems.com/#business",
         "name": "CoreNode Systems",
-        "url": "https://corenodesystems.com",
-        "description": "Consultant en automatisation opérationnelle et intégration d'outils pour PME québécoises en services terrain, construction et métiers spécialisés. Connexion CRM, facturation, dispatch et comptabilité ; systèmes documentés que l'équipe opère sans dépendance au consultant.",
+        "legalName": "Systèmes CoreNode",
+        "alternateName": "Systèmes CoreNode",
+        "url": "https://corenodesystems.com/",
+        "logo": "https://corenodesystems.com/logo-512.png",
+        "image": "https://corenodesystems.com/og-image.jpg",
+        "telephone": "+1-418-922-7490",
         "email": "william@corenodesystems.com",
+        "description": "Consultant en automatisation opérationnelle et intégration d'outils pour PME québécoises en services terrain, construction et métiers spécialisés. Connexion CRM, facturation, répartition et comptabilité ; systèmes documentés que l'équipe opère sans dépendre du consultant.",
+        "foundingDate": "2024-09",
         "founder": {
           "@type": "Person",
           "name": "William Fomete",
-          "jobTitle": "Solutions Architect",
+          "jobTitle": "Architecte de solutions",
           "sameAs": "https://www.linkedin.com/in/william-fomete"
         },
-        "areaServed": {
-          "@type": "State",
-          "name": "Québec",
-          "containedInPlace": {
-            "@type": "Country",
-            "name": "Canada"
+        "openingHoursSpecification": [
+          {
+            "@type": "OpeningHoursSpecification",
+            "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+            "opens": "09:00",
+            "closes": "18:30"
           }
-        },
-        "serviceType": [
-          "Automatisation des processus d'affaires",
-          "Intégration CRM et facturation",
-          "Automatisation des opérations de services terrain",
-          "Infrastructure de gestion et tableaux de bord",
-          "Intégration d'outils PME (n8n, QuickBooks, dispatch)"
         ],
-        "priceRange": "$$",
+        "areaServed": [
+          { "@type": "City", "name": "Québec" },
+          { "@type": "City", "name": "Lévis" },
+          { "@type": "City", "name": "Saint-Augustin-de-Desmaures" },
+          { "@type": "City", "name": "Saint-Lambert-de-Lauzon" },
+          { "@type": "City", "name": "Sainte-Marie" },
+          { "@type": "City", "name": "Saint-Joseph-de-Beauce" },
+          { "@type": "City", "name": "Beauceville" },
+          { "@type": "City", "name": "Saint-Georges" },
+          { "@type": "City", "name": "Thetford Mines" },
+          { "@type": "City", "name": "Montmagny" }
+        ],
         "address": {
           "@type": "PostalAddress",
           "addressRegion": "QC",
           "addressCountry": "CA"
         },
+        "hasMap": "https://www.google.com/maps/place/?q=place_id:ChIJSWV3DMhRHCsR5zmth468YCA",
+        "sameAs": ["https://www.linkedin.com/in/william-fomete"],
+        "serviceType": [
+          "Automatisation des processus d'affaires",
+          "Intégration CRM et facturation",
+          "Automatisation des opérations de services terrain",
+          "Infrastructure de gestion et tableaux de bord",
+          "Intégration d'outils PME (n8n, QuickBooks, répartition)"
+        ],
+        "priceRange": "$$",
         "knowsLanguage": ["fr-CA", "en-CA"]
       }
     </script>

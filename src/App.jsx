@@ -2,18 +2,26 @@ import { useState, useEffect } from 'react'
 import { Routes, Route, Link } from 'react-router-dom'
 import useLang from './useLang.js'
 import AuditPage from './AuditPage.jsx'
+import PrivacyPage from './PrivacyPage.jsx'
+import NotFoundPage from './NotFoundPage.jsx'
 import Seo from './seo/Seo.jsx'
 import { PAGES } from './seo/siteMeta.js'
-import logoImg from './assets/logo.png'
+import { Logo } from './SimpleLayout.jsx'
 import { STACK } from './stack.js'
 import portraitWebp from './assets/william-fomete.webp'
 import portraitJpg from './assets/william-fomete.jpg'
-
-const EMAIL = 'william@corenodesystems.com'
-const MAILTO = 'mailto:' + EMAIL
-const LINKEDIN = 'https://www.linkedin.com/in/william-fomete'
-const BOOKING = 'https://cal.com/corenode-systems/meeting-de-30-min'
-const WEBHOOK_URL = import.meta.env.VITE_N8N_WEBHOOK_URL
+import avatarImg from './assets/william-avatar.webp'
+import {
+  EMAIL,
+  MAILTO,
+  PHONE,
+  TEL,
+  LINKEDIN,
+  BOOKING,
+  GOOGLE_PROFILE,
+  LEGAL_NAME,
+  BRAND,
+} from './contact.js'
 
 const SECTEUR_OPTIONS = {
   fr: [
@@ -35,20 +43,22 @@ const SECTEUR_OPTIONS = {
 }
 
 const inputClass =
-  'w-full bg-white/[0.03] border border-white/10 rounded-md px-4 py-2.5 text-[14px] text-white placeholder:text-white/30 transition-colors focus:outline-none focus:border-white/30 focus:bg-white/[0.04] disabled:opacity-50 disabled:cursor-not-allowed'
+  'w-full bg-white/[0.03] border border-white/10 rounded-md px-4 py-2.5 text-[14px] text-white placeholder:text-white/40 transition-colors focus:outline-none focus:border-white/30 focus:bg-white/[0.04] disabled:opacity-50 disabled:cursor-not-allowed'
 const labelClass = 'block text-[13px] font-medium text-white/70 mb-1.5'
 
 const content = {
   fr: {
-    nav: { services: 'Services', method: 'Méthode', about: 'À propos', cta: 'Réserver un appel découverte' },
+    nav: { services: 'Services', method: 'Méthode', about: 'À propos', cta: 'Réserver un appel découverte', call: 'Appeler William' },
     hero: {
-      location: 'Québec, Canada',
+      location: 'Automatisation pour entrepreneurs en services terrain, de Québec à la Beauce',
       titleA: "Arrête d'être le pont humain",
       titleB: 'entre tes propres logiciels.',
       subtitle: "Je construis l'infrastructure qui connecte tes outils, automatise tes suivis et libère ton équipe du travail manuel répétitif. Des systèmes documentés que tu peux opérer sans moi.",
       cta: 'Réserver un appel découverte',
       ctaAudit: 'Diagnostic gratuit en 2 minutes',
-      reassurance: 'Appel sans engagement. Réponse sous 24 h.',
+      reassurance: 'Appel sans engagement, réponse sous 24 h.',
+      direct: 'Tu parles directement à William.',
+      callPrefix: 'Ou appelle au',
       proofHours: '40 h',
       proofHoursLabel: 'de travail manuel évitées chaque semaine pour mon dernier client',
       ratingValue: (r) => r.toFixed(1).replace('.', ','),
@@ -156,7 +166,7 @@ const content = {
       title: "L'architecte derrière les systèmes",
       body: "Je ne vends pas des outils. Je construis l'infrastructure qui permet à ton entreprise de grandir sans que tu aies à être partout en même temps. Chaque mandat se termine avec une documentation complète et une équipe formée, parce qu'un système que tu ne comprends pas est une dette, pas un actif.",
       proof: "Dernier mandat en date : plus de 40 heures de saisie et de coordination manuelles évitées chaque semaine. L'équivalent d'un poste administratif à temps plein.",
-      signature: 'William Fomete, Solutions Architect',
+      signature: 'William Fomete, architecte de solutions',
       photoAlt: 'William Fomete, fondateur de CoreNode Systems',
       location: 'Québec, Canada',
       linkedin: 'Profil LinkedIn',
@@ -165,10 +175,11 @@ const content = {
       title: 'Prêt à arrêter de perdre du temps sur ce qui devrait tourner seul ?',
       subtitle: 'Un appel de 30 minutes suffit pour savoir si on est faits pour travailler ensemble.',
       cta: 'Parler à William',
+      phone: 'Ou appelle-moi directement au',
     },
     footer: {
-      tagline: 'Solutions Architect. Automatisation et infrastructure pour PME québécoises.',
-      rights: '© 2026 CoreNode Systems. Québec, Canada.',
+      tagline: 'Architecte de solutions. Automatisation et infrastructure pour PME québécoises en services terrain.',
+      rights: `© 2026 ${LEGAL_NAME} (${BRAND}). Québec, Canada.`,
       privacy: 'Politique de confidentialité',
       audit: 'Diagnostic gratuit',
       home: 'Accueil',
@@ -179,10 +190,11 @@ const content = {
       reassuranceTitle: 'À quoi t\u2019attendre',
       reassurance: [
         { title: 'Réponse sous 24 h', text: 'Pas de file d\u2019attente, pas de robot. Je lis ta demande et je te reviens.' },
-        { title: '100 % confidentiel', text: 'Tes informations servent à te répondre, point. Jamais partagées, jamais revendues.' },
+        { title: '100 % confidentiel', text: 'Tes informations servent à te répondre, point. Jamais vendues, jamais utilisées pour autre chose.' },
         { title: 'Sans engagement', text: 'Un premier échange pour voir si le fit est là. Rien à signer.' },
       ],
-      directTitle: 'Tu préfères écrire directement ?',
+      directTitle: 'Tu préfères écrire ou appeler ?',
+      phoneLabel: 'Téléphone',
       emailLabel: 'Courriel',
       linkedinLabel: 'LinkedIn',
       fields: {
@@ -198,59 +210,26 @@ const content = {
       submit: 'Envoyer ma demande',
       submitting: 'Envoi en cours…',
       success: 'Merci ! Je te réponds sous 24 h.',
-      error: "Une erreur s'est produite. Réessaie ou écris-moi directement.",
+      error: "L'envoi n'a pas fonctionné. Réessaie, ou joins-moi directement :",
       retry: 'Réessayer',
       emailInvalid: 'Entre une adresse courriel valide.',
       required: 'Ce champ est requis.',
-      privacyNote: 'En envoyant ce formulaire, tu acceptes que CoreNode Systems utilise ces informations uniquement pour répondre à ta demande. Elles ne sont jamais partagées avec des tiers.',
-      privacyLink: 'Politique de confidentialité',
-    },
-    privacy: {
-      title: 'Politique de confidentialité',
-      updated: 'Dernière mise à jour : juin 2026',
-      close: 'Fermer',
-      sections: [
-        {
-          heading: 'Qui je suis',
-          body: "CoreNode Systems est une entreprise individuelle enregistrée au Québec, exploitée par William Fomete, qui agit comme responsable de la protection des renseignements personnels. Pour toute question liée à cette politique : william@corenodesystems.com.",
-        },
-        {
-          heading: 'Les renseignements que je collecte',
-          body: "Uniquement ce que tu fournis volontairement via le formulaire de contact : nom, adresse courriel, nom de l'entreprise (optionnel), secteur d'activité et description de ton projet. Aucun cookie publicitaire, aucun pixel de suivi, aucune collecte automatique de tes habitudes de navigation n'est utilisé sur ce site.",
-        },
-        {
-          heading: 'Pourquoi je les collecte',
-          body: "Pour répondre à ta demande et évaluer si un mandat est pertinent. C'est tout. Tes renseignements ne servent à aucune autre fin.",
-        },
-        {
-          heading: 'Partage avec des tiers',
-          body: "Je ne vends, ne loue ni ne partage tes renseignements à des fins commerciales. Pour traiter ta demande, ils transitent par mon infrastructure technique (hébergement, service de courriel, outil d'automatisation n8n auto-hébergé), uniquement dans le but de t'acheminer une réponse.",
-        },
-        {
-          heading: 'Conservation',
-          body: "Je conserve tes renseignements le temps nécessaire pour assurer le suivi de ta demande et d'un éventuel mandat. Tu peux demander leur suppression en tout temps.",
-        },
-        {
-          heading: 'Stockage local',
-          body: "Ce site mémorise ta préférence de langue (français ou anglais) directement dans ton navigateur. Cette donnée reste sur ton appareil, ne sert qu'au bon fonctionnement du site et n'est pas utilisée pour te suivre.",
-        },
-        {
-          heading: 'Tes droits',
-          body: "Conformément à la Loi 25 (Québec), tu as le droit d'accéder à tes renseignements, de les faire corriger, de retirer ton consentement et d'en demander la suppression. Pour exercer ces droits, écris-moi à william@corenodesystems.com.",
-        },
-      ],
+      privacyNote: 'Tes renseignements servent uniquement à répondre à ta demande. Ils sont traités par mes fournisseurs techniques, dont certains hébergent les données à l’extérieur du Québec. Détails dans la',
+      privacyLink: 'politique de confidentialité',
     },
   },
   en: {
-    nav: { services: 'Services', method: 'Method', about: 'About', cta: 'Book a call' },
+    nav: { services: 'Services', method: 'Method', about: 'About', cta: 'Book a call', call: 'Call William' },
     hero: {
-      location: 'Quebec, Canada',
+      location: 'Automation for field service businesses, from Québec City to the Beauce',
       titleA: 'Stop being the human bridge',
       titleB: 'between your own software.',
       subtitle: "I build the infrastructure that connects your tools, automates your follow-ups and frees your team from repetitive manual work. Documented systems you can operate without me.",
       cta: 'Book a discovery call',
       ctaAudit: 'Free 2-minute diagnostic',
-      reassurance: 'No-commitment call. Reply within 24 h.',
+      reassurance: 'No-commitment call, reply within 24 h.',
+      direct: 'You talk directly to William.',
+      callPrefix: 'Or call',
       proofHours: '40 h',
       proofHoursLabel: 'of manual work avoided every week for my latest client',
       ratingValue: (r) => r.toFixed(1),
@@ -367,10 +346,11 @@ const content = {
       title: 'Ready to stop losing time on what should run itself?',
       subtitle: 'A 30-minute call is enough to know if we should work together.',
       cta: 'Talk to William',
+      phone: 'Or call me directly at',
     },
     footer: {
-      tagline: 'Solutions Architect. Automation and infrastructure for Quebec SMBs.',
-      rights: '© 2026 CoreNode Systems. Quebec, Canada.',
+      tagline: 'Solutions architect. Automation and infrastructure for Quebec field service SMBs.',
+      rights: `© 2026 ${LEGAL_NAME} (${BRAND}). Quebec, Canada.`,
       privacy: 'Privacy policy',
       audit: 'Free diagnostic',
       home: 'Home',
@@ -381,10 +361,11 @@ const content = {
       reassuranceTitle: 'What to expect',
       reassurance: [
         { title: 'Reply within 24 h', text: 'No queue, no bot. I read your message and get back to you myself.' },
-        { title: '100% confidential', text: 'Your information is used to reply to you, nothing else. Never shared, never sold.' },
+        { title: '100% confidential', text: 'Your information is used to reply to you, nothing else. Never sold.' },
         { title: 'No commitment', text: 'A first conversation to see if there\u2019s a fit. Nothing to sign.' },
       ],
-      directTitle: 'Prefer to write directly?',
+      directTitle: 'Prefer to write or call?',
+      phoneLabel: 'Phone',
       emailLabel: 'Email',
       linkedinLabel: 'LinkedIn',
       fields: {
@@ -400,58 +381,14 @@ const content = {
       submit: 'Send my request',
       submitting: 'Sending…',
       success: 'Thank you! I will reply within 24 hours.',
-      error: 'Something went wrong. Please try again or email me directly.',
+      error: 'Sending failed. Try again, or reach me directly:',
       retry: 'Try again',
       emailInvalid: 'Enter a valid email address.',
       required: 'This field is required.',
-      privacyNote: 'By sending this form, you agree that CoreNode Systems will use this information solely to respond to your request. It is never shared with third parties.',
-      privacyLink: 'Privacy policy',
-    },
-    privacy: {
-      title: 'Privacy policy',
-      updated: 'Last updated: June 2026',
-      close: 'Close',
-      sections: [
-        {
-          heading: 'Who I am',
-          body: "CoreNode Systems is a sole proprietorship registered in Quebec, operated by William Fomete, who acts as the person responsible for the protection of personal information. For any question about this policy: william@corenodesystems.com.",
-        },
-        {
-          heading: 'What I collect',
-          body: "Only what you voluntarily provide through the contact form: name, email address, company name (optional), industry and a description of your project. No advertising cookies, no tracking pixels, and no automatic collection of your browsing behaviour are used on this site.",
-        },
-        {
-          heading: 'Why I collect it',
-          body: "To respond to your request and assess whether an engagement makes sense. That's it. Your information is not used for any other purpose.",
-        },
-        {
-          heading: 'Sharing with third parties',
-          body: "I do not sell, rent or share your information for commercial purposes. To process your request, it passes through my technical infrastructure (hosting, email service, self-hosted n8n automation tool), solely to deliver a reply to you.",
-        },
-        {
-          heading: 'Retention',
-          body: "I keep your information for as long as needed to follow up on your request and a potential engagement. You can request its deletion at any time.",
-        },
-        {
-          heading: 'Local storage',
-          body: "This site remembers your language preference (French or English) directly in your browser. That data stays on your device, serves only to make the site work, and is not used to track you.",
-        },
-        {
-          heading: 'Your rights',
-          body: "Under Quebec's Law 25, you have the right to access your information, have it corrected, withdraw your consent and request its deletion. To exercise these rights, write to william@corenodesystems.com.",
-        },
-      ],
+      privacyNote: 'Your information is only used to answer your request. It is processed by my technical providers, some of which host data outside Quebec. Details in the',
+      privacyLink: 'privacy policy',
     },
   },
-}
-
-function Logo() {
-  return (
-    <div className="flex items-center gap-2.5">
-      <img src={logoImg} alt="CoreNode Systems" width="26" height="26" className="block" />
-      <span className="text-[15px] font-semibold tracking-tight text-white">CoreNode</span>
-    </div>
-  )
 }
 
 function ArrowIcon({ size = 14 }) {
@@ -520,7 +457,7 @@ function Field({ label, optional, error, htmlFor, children }) {
     <div>
       <label htmlFor={htmlFor} className={labelClass}>
         {label}
-        {optional && <span className="text-white/40 font-normal ml-1">{optional}</span>}
+        {optional && <span className="text-white/60 font-normal ml-1">{optional}</span>}
       </label>
       {children}
       {error && <p className="mt-1.5 text-[12px] text-red-400">{error}</p>}
@@ -602,6 +539,14 @@ function HandshakeIcon({ size = 16 }) {
   )
 }
 
+function PhoneIcon({ size = 16 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z" />
+    </svg>
+  )
+}
+
 const REASSURANCE_ICONS = [ClockIcon, LockIcon, HandshakeIcon]
 
 function Navbar({ lang, setLang, t }) {
@@ -629,6 +574,19 @@ function Navbar({ lang, setLang, t }) {
           <a href="#about" className="hover:text-white transition-colors">{t.nav.about}</a>
         </div>
         <div className="flex items-center gap-3">
+          <a
+            href={TEL}
+            className="hidden lg:inline text-[13px] text-white/70 hover:text-white transition-colors tabular-nums"
+          >
+            {PHONE}
+          </a>
+          <a
+            href={TEL}
+            aria-label={t.nav.call}
+            className="sm:hidden w-9 h-9 inline-flex items-center justify-center rounded-md border border-white/15 text-white/80 hover:text-white hover:border-white/40 transition-colors"
+          >
+            <PhoneIcon size={16} />
+          </a>
           <button
             onClick={() => setLang(lang === 'fr' ? 'en' : 'fr')}
             className="text-[11px] font-medium text-white/60 hover:text-white px-2.5 py-1.5 border border-white/15 rounded-md transition-colors hover:border-white/40"
@@ -646,8 +604,6 @@ function Navbar({ lang, setLang, t }) {
     </nav>
   )
 }
-
-const GOOGLE_PROFILE = 'https://www.google.com/maps/place/?q=place_id:ChIJSWV3DMhRHCsR5zmth468YCA'
 
 // Valeurs de repli (HTML prérendu, ou si l'API est indisponible). La note réelle
 // arrive de /api/google-rating, qui interroge Google et met le résultat en cache 1 h.
@@ -700,7 +656,26 @@ function Hero({ t }) {
               {t.hero.ctaAudit}
             </Link>
           </div>
-          <p className="mt-4 text-[13px] text-white/45">{t.hero.reassurance}</p>
+          <div className="mt-6 flex items-center gap-3">
+            <img
+              src={avatarImg}
+              alt=""
+              width="44"
+              height="44"
+              className="w-11 h-11 shrink-0 rounded-full object-cover"
+            />
+            <p className="text-[13px] text-white/60 leading-snug">
+              <span className="text-white/85">{t.hero.direct}</span> {t.hero.reassurance}
+              <br />
+              {t.hero.callPrefix}{' '}
+              <a
+                href={TEL}
+                className="text-white underline underline-offset-4 decoration-white/30 hover:decoration-white transition-colors tabular-nums"
+              >
+                {PHONE}
+              </a>
+            </p>
+          </div>
 
           <dl className="mt-12 pt-8 border-t border-white/10 grid grid-cols-[auto_1fr] sm:grid-cols-[auto_1fr_auto_1fr] gap-x-4 gap-y-5 items-center max-w-xl">
             <dt className="font-display text-3xl font-semibold text-white">{t.hero.proofHours}</dt>
@@ -785,7 +760,7 @@ function HeroFlow({ flow }) {
         </p>
       </div>
       <figcaption className="mt-5 flex items-center justify-between">
-        <span className="text-[12px] text-white/40 tabular-nums">{index + 1} / {total}</span>
+        <span className="text-[12px] text-white/60 tabular-nums">{index + 1} / {total}</span>
         <span className="flex gap-2">
           <button
             type="button"
@@ -889,10 +864,9 @@ function AuditCTA({ t }) {
           </div>
           <Link
             to="/audit"
-            className="inline-flex items-center gap-2 px-4 py-2 text-[13px] font-medium text-white border border-white/15 rounded-md hover:bg-white/5 hover:border-white/30 transition-colors flex-shrink-0"
+            className="inline-flex items-center px-4 py-2 text-[13px] font-medium text-white border border-white/15 rounded-md hover:bg-white/5 hover:border-white/30 transition-colors flex-shrink-0"
           >
             {t.auditCta.cta}
-            <ArrowIcon size={12} />
           </Link>
         </div>
       </div>
@@ -926,14 +900,14 @@ function Fit({ t }) {
           </div>
           <div className="bg-white/[0.03] border border-white/10 rounded-xl p-8">
             <div className="flex items-center gap-2.5 mb-6">
-              <div className="w-7 h-7 bg-white/5 text-white/40 rounded-full flex items-center justify-center">
+              <div className="w-7 h-7 bg-white/5 text-white/60 rounded-full flex items-center justify-center">
                 <XIcon size={14} />
               </div>
               <h3 className="text-[15px] font-medium text-white">{t.fit.no.title}</h3>
             </div>
             <ul className="space-y-3.5">
               {t.fit.no.items.map((item, i) => (
-                <li key={i} className="flex gap-3 text-[14px] text-white/45 leading-relaxed">
+                <li key={i} className="flex gap-3 text-[14px] text-white/60 leading-relaxed">
                   <span className="text-white/30 mt-1 flex-shrink-0">
                     <XIcon size={14} />
                   </span>
@@ -1024,9 +998,8 @@ function About({ t }) {
               <div className="text-[14px] font-medium text-white">{t.about.signature}</div>
               <div className="text-[13px] text-white/50 mt-1">{t.about.location}</div>
             </div>
-            <a href={LINKEDIN} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-4 py-2 text-[13px] font-medium text-white border border-white/15 rounded-md hover:bg-white/5 hover:border-white/30 transition-colors ml-auto">
+            <a href={LINKEDIN} target="_blank" rel="noopener noreferrer" className="inline-flex items-center px-4 py-2 text-[13px] font-medium text-white border border-white/15 rounded-md hover:bg-white/5 hover:border-white/30 transition-colors ml-auto">
               {t.about.linkedin}
-              <ArrowIcon size={12} />
             </a>
           </div>
         </div>
@@ -1035,7 +1008,7 @@ function About({ t }) {
   )
 }
 
-function ContactForm({ t, lang, onOpenPrivacy }) {
+function ContactForm({ t, lang }) {
   const [status, setStatus] = useState('idle')
   const [errors, setErrors] = useState({})
   const [form, setForm] = useState({
@@ -1079,15 +1052,11 @@ function ContactForm({ t, lang, onOpenPrivacy }) {
       return
     }
 
-    if (!WEBHOOK_URL) {
-      setStatus('error')
-      return
-    }
-
     setStatus('loading')
 
     try {
-      const res = await fetch(WEBHOOK_URL, {
+      // Fonction serveur du site (api/contact.js), qui transmet à n8n.
+      const res = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -1096,6 +1065,7 @@ function ContactForm({ t, lang, onOpenPrivacy }) {
           entreprise: form.entreprise.trim(),
           secteur: form.secteur,
           description: form.description.trim(),
+          lang,
           company_website: form.company_website,
         }),
       })
@@ -1127,7 +1097,12 @@ function ContactForm({ t, lang, onOpenPrivacy }) {
     <form onSubmit={handleSubmit} noValidate className="relative bg-white/[0.03] border border-white/10 rounded-xl p-6 sm:p-8 space-y-5">
       {status === 'error' && (
         <div className="rounded-md border border-red-400/30 bg-red-400/10 px-4 py-3 text-[13px] text-red-300">
-          <p>{t.contact.error}</p>
+          <p>
+            {t.contact.error}{' '}
+            <a href={MAILTO} className="text-white underline underline-offset-2">{EMAIL}</a>
+            {' · '}
+            <a href={TEL} className="text-white underline underline-offset-2 tabular-nums">{PHONE}</a>
+          </p>
           <button
             type="button"
             onClick={handleRetry}
@@ -1241,22 +1216,22 @@ function ContactForm({ t, lang, onOpenPrivacy }) {
           )}
         </Button>
 
-        <p className="text-[12px] text-white/40 leading-relaxed">
+        <p className="text-[12px] text-white/60 leading-relaxed">
           {t.contact.privacyNote}{' '}
-          <button
-            type="button"
-            onClick={onOpenPrivacy}
-            className="text-white/60 hover:text-white underline underline-offset-2 transition-colors"
+          <Link
+            to="/confidentialite"
+            className="text-white/80 hover:text-white underline underline-offset-2 transition-colors"
           >
             {t.contact.privacyLink}
-          </button>
+          </Link>
+          .
         </p>
       </div>
     </form>
   )
 }
 
-function Contact({ t, lang, onOpenPrivacy }) {
+function Contact({ t, lang }) {
   return (
     <section id="contact" className="py-24 px-6 lg:px-8 border-t border-white/10">
       <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start">
@@ -1289,25 +1264,30 @@ function Contact({ t, lang, onOpenPrivacy }) {
             <div className="text-[13px] font-medium text-white/70 mb-4">{t.contact.directTitle}</div>
             <div className="flex flex-wrap gap-3">
               <a
-                href={MAILTO}
+                href={TEL}
                 className="inline-flex items-center gap-2 px-4 py-2 text-[13px] font-medium text-white border border-white/15 rounded-md hover:bg-white/5 hover:border-white/30 transition-colors"
               >
+                <PhoneIcon size={14} />
+                <span className="tabular-nums">{PHONE}</span>
+              </a>
+              <a
+                href={MAILTO}
+                className="inline-flex items-center px-4 py-2 text-[13px] font-medium text-white border border-white/15 rounded-md hover:bg-white/5 hover:border-white/30 transition-colors"
+              >
                 {t.contact.emailLabel}
-                <ArrowIcon size={12} />
               </a>
               <a
                 href={LINKEDIN}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-4 py-2 text-[13px] font-medium text-white border border-white/15 rounded-md hover:bg-white/5 hover:border-white/30 transition-colors"
+                className="inline-flex items-center px-4 py-2 text-[13px] font-medium text-white border border-white/15 rounded-md hover:bg-white/5 hover:border-white/30 transition-colors"
               >
                 {t.contact.linkedinLabel}
-                <ArrowIcon size={12} />
               </a>
             </div>
           </div>
         </div>
-        <ContactForm t={t} lang={lang} onOpenPrivacy={onOpenPrivacy} />
+        <ContactForm t={t} lang={lang} />
       </div>
     </section>
   )
@@ -1327,23 +1307,31 @@ function FinalCTA({ t }) {
           target="_blank"
           rel="noopener noreferrer"
           size="lg"
-          showArrow
           className="mt-10"
         >
           {t.finalCta.cta}
         </Button>
+        <p className="mt-6 text-[14px] text-white/60">
+          {t.finalCta.phone}{' '}
+          <a
+            href={TEL}
+            className="text-white underline underline-offset-4 decoration-white/30 hover:decoration-white transition-colors tabular-nums"
+          >
+            {PHONE}
+          </a>
+        </p>
       </div>
     </section>
   )
 }
 
-function Footer({ t, onOpenPrivacy }) {
+function Footer({ t }) {
   return (
     <footer className="border-t border-white/10 py-12 px-6 lg:px-8">
       <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
         <div>
           <Logo />
-          <p className="text-[13px] text-white/45 mt-3 max-w-md">{t.footer.tagline}</p>
+          <p className="text-[13px] text-white/60 mt-3 max-w-md">{t.footer.tagline}</p>
           {/* Maillage interne. GSC rapportait zéro lien interne sur le domaine. */}
           <nav className="flex flex-wrap gap-x-5 gap-y-2 mt-4 text-[13px]">
             <Link to="/" className="text-white/60 hover:text-white transition-colors">
@@ -1352,88 +1340,28 @@ function Footer({ t, onOpenPrivacy }) {
             <Link to="/audit" className="text-white/60 hover:text-white transition-colors">
               {t.footer.audit}
             </Link>
+            <Link to="/confidentialite" className="text-white/60 hover:text-white transition-colors">
+              {t.footer.privacy}
+            </Link>
           </nav>
         </div>
-        <div className="text-[13px] text-white/45 sm:text-right">
+        <div className="text-[13px] text-white/60 sm:text-right">
+          <a href={TEL} className="text-white/80 hover:text-white block mb-1 transition-colors tabular-nums">
+            {PHONE}
+          </a>
           <a href={MAILTO} className="text-white/80 hover:text-white block mb-1 transition-colors">
             {EMAIL}
           </a>
-          <p className="mb-1">{t.footer.rights}</p>
-          <button
-            type="button"
-            onClick={onOpenPrivacy}
-            className="text-white/45 hover:text-white underline underline-offset-2 transition-colors"
-          >
-            {t.footer.privacy}
-          </button>
+          <p>{t.footer.rights}</p>
         </div>
       </div>
     </footer>
   )
 }
 
-function PrivacyModal({ t, open, onClose }) {
-  useEffect(() => {
-    if (!open) return
-    const onKey = (e) => {
-      if (e.key === 'Escape') onClose()
-    }
-    document.addEventListener('keydown', onKey)
-    document.body.style.overflow = 'hidden'
-    return () => {
-      document.removeEventListener('keydown', onKey)
-      document.body.style.overflow = ''
-    }
-  }, [open, onClose])
-
-  if (!open) return null
-
-  return (
-    <div
-      className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6"
-      role="dialog"
-      aria-modal="true"
-      aria-label={t.privacy.title}
-    >
-      <div
-        className="absolute inset-0 bg-black/70 backdrop-blur-sm"
-        onClick={onClose}
-      />
-      <div className="relative w-full max-w-2xl max-h-[85vh] overflow-y-auto bg-[#19191C] border border-white/10 rounded-2xl">
-        <div className="sticky top-0 flex items-center justify-between px-6 sm:px-8 py-5 border-b border-white/10 bg-[#19191C]/95 backdrop-blur">
-          <div>
-            <h2 className="text-[18px] font-semibold text-white">{t.privacy.title}</h2>
-            <p className="text-[12px] text-white/40 mt-0.5">{t.privacy.updated}</p>
-          </div>
-          <button
-            type="button"
-            onClick={onClose}
-            aria-label={t.privacy.close}
-            className="w-8 h-8 flex-shrink-0 flex items-center justify-center text-white/50 hover:text-white border border-white/10 hover:border-white/30 rounded-md transition-colors"
-          >
-            <XIcon size={15} />
-          </button>
-        </div>
-        <div className="px-6 sm:px-8 py-6 space-y-6">
-          {t.privacy.sections.map((s, i) => (
-            <div key={i}>
-              <h3 className="text-[14px] font-medium text-white mb-1.5">{s.heading}</h3>
-              <p className="text-[13px] text-white/60 leading-relaxed">{s.body}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  )
-}
-
 function HomePage() {
   const [lang, setLang] = useLang()
-  const [privacyOpen, setPrivacyOpen] = useState(false)
-
-
   const t = content[lang]
-  const openPrivacy = () => setPrivacyOpen(true)
 
   return (
     <div className="min-h-screen bg-[#141416] text-white antialiased">
@@ -1448,11 +1376,10 @@ function HomePage() {
         <Method t={t} />
         <Services t={t} />
         <About t={t} />
-        <Contact t={t} lang={lang} onOpenPrivacy={openPrivacy} />
+        <Contact t={t} lang={lang} />
         <FinalCTA t={t} />
       </main>
-      <Footer t={t} onOpenPrivacy={openPrivacy} />
-      <PrivacyModal t={t} open={privacyOpen} onClose={() => setPrivacyOpen(false)} />
+      <Footer t={t} />
     </div>
   )
 }
@@ -1464,6 +1391,8 @@ function App() {
     <Routes>
       <Route path="/" element={<HomePage />} />
       <Route path="/audit" element={<AuditPage />} />
+      <Route path="/confidentialite" element={<PrivacyPage />} />
+      <Route path="*" element={<NotFoundPage />} />
     </Routes>
   )
 }
