@@ -3,11 +3,8 @@ import { Link } from 'react-router-dom'
 import Seo from './seo/Seo.jsx'
 import useLang from './useLang.js'
 import { PAGES } from './seo/siteMeta.js'
-import logoImg from './assets/logo.png'
-
-
-const CAL_LINK = 'https://cal.com/corenode-systems/meeting-de-30-min'
-const WEBHOOK_URL = import.meta.env.VITE_AUDIT_WEBHOOK_URL
+import { Logo } from './SimpleLayout.jsx'
+import { BOOKING as CAL_LINK, EMAIL, MAILTO, PHONE, TEL, LEGAL_NAME, BRAND } from './contact.js'
 
 const TEAL = '#2A9D8F'
 const HEADING_FONT = { fontFamily: "'Space Grotesk', Inter, sans-serif" }
@@ -19,7 +16,7 @@ const MAX_TOOL_LENGTH = 60
 const MAX_EMAIL_LENGTH = 254
 
 const inputClass =
-  'w-full bg-white/[0.03] border border-white/10 rounded-md px-4 py-2.5 text-[14px] text-white placeholder:text-white/30 transition-colors focus:outline-none focus:border-white/30 focus:bg-white/[0.05] disabled:opacity-50 disabled:cursor-not-allowed'
+  'w-full bg-white/[0.03] border border-white/10 rounded-md px-4 py-2.5 text-[14px] text-white placeholder:text-white/40 transition-colors focus:outline-none focus:border-white/30 focus:bg-white/[0.05] disabled:opacity-50 disabled:cursor-not-allowed'
 
 const content = {
   fr: {
@@ -38,10 +35,11 @@ const content = {
     emailPlaceholder: 'toi@tonentreprise.com',
     submit: 'Obtenir mon verdict',
     submitting: 'Analyse en cours…',
-    privacyNote: "Ton courriel sert à t'envoyer le diagnostic, rien d'autre. Jamais partagé, jamais revendu.",
+    privacyNote: "Ton courriel sert à t'envoyer le diagnostic, rien d'autre. Les noms d'outils sont analysés par un modèle d'IA, sans ton courriel. Tes renseignements sont traités par mes fournisseurs techniques, dont certains hébergent les données à l'extérieur du Québec. Détails dans la",
+    privacyLink: 'politique de confidentialité',
     required: 'Ce champ est requis.',
     emailInvalid: 'Entre une adresse courriel valide.',
-    error: "Une erreur s'est produite. Réessaie ou écris-moi directement.",
+    error: "Le diagnostic n'a pas pu être généré. Réessaie dans un instant, ou joins-moi directement :",
     retry: 'Réessayer',
     cooldown: 'Attends quelques secondes avant de renvoyer.',
     maxAttempts: "Limite d'essais atteinte pour cette session. Écris-moi directement si tu veux aller plus loin.",
@@ -51,7 +49,16 @@ const content = {
     ctaText: 'Tu veux savoir comment régler ça concrètement ? 30 minutes, sans engagement.',
     ctaButton: 'Réserver mon appel',
     ctaReassurance: 'Appel sans engagement. Réponse sous 24 h.',
-    rights: '© 2026 CoreNode Systems. Québec, Canada.',
+    rights: `© 2026 ${LEGAL_NAME} (${BRAND}). Québec, Canada.`,
+    privacy: 'Confidentialité',
+    sampleTitle: 'Exemple de verdict',
+    sampleIntro: 'Voici un vrai verdict généré pour ces 3 outils : QuickBooks, Excel (dispatch) et Jobber.',
+    sample: [
+      "Ce qui fuit probablement entre ces trois outils, c'est la ressaisie. Un appel arrive, tu notes ça dans Jobber ou sur papier, la soumission part, le bon de travail est recopié dans Excel pour la répartition, puis la facture repart dans QuickBooks. Chaque copie à la main, c'est une chance d'erreur sur le montant, l'adresse ou le client, et des factures qui partent en retard parce que quelqu'un a oublié de fermer la job.",
+      "Sur ce que tu as déjà, Jobber gère la plupart des étapes terrain : clients, soumissions, travaux, facturation. Il existe aussi une synchronisation avec QuickBooks, mais son niveau exact dépend de ta version ; il faut le vérifier avec ton fournisseur. Le plus simple est souvent de faire de Jobber ta source unique et de sortir Excel de la boucle.",
+      "Priorité numéro 1 : cette semaine, fais la liste des trois étapes où tu recopies de l'information (soumission vers bon de travail, bon de travail vers facture, facture vers comptabilité) et vérifie laquelle de ces copies la synchronisation entre Jobber et QuickBooks peut remplacer.",
+    ],
+    sampleScore: 4,
     lookTitle: 'Ce que le diagnostic regarde',
     look: [
       { title: 'La ressaisie', text: "Les endroits où la même information (client, adresse, heures, montant) est tapée plus d'une fois d'un outil à l'autre." },
@@ -88,10 +95,11 @@ const content = {
     emailPlaceholder: 'you@yourcompany.com',
     submit: 'Get my verdict',
     submitting: 'Analyzing…',
-    privacyNote: 'Your email is used to send you the diagnosis, nothing else. Never shared, never sold.',
+    privacyNote: 'Your email is used to send you the diagnosis, nothing else. The tool names are analyzed by an AI model, without your email. Your information is processed by my technical providers, some of which host data outside Quebec. Details in the',
+    privacyLink: 'privacy policy',
     required: 'This field is required.',
     emailInvalid: 'Enter a valid email address.',
-    error: 'Something went wrong. Try again or email me directly.',
+    error: 'The diagnosis could not be generated. Try again in a moment, or reach me directly:',
     retry: 'Try again',
     cooldown: 'Wait a few seconds before sending again.',
     maxAttempts: 'Attempt limit reached for this session. Email me directly if you want to go further.',
@@ -101,7 +109,16 @@ const content = {
     ctaText: 'Want to know how to actually fix it? 30 minutes, no commitment.',
     ctaButton: 'Book my call',
     ctaReassurance: 'No-commitment call. Reply within 24 h.',
-    rights: '© 2026 CoreNode Systems. Quebec, Canada.',
+    rights: `© 2026 ${LEGAL_NAME} (${BRAND}). Quebec, Canada.`,
+    privacy: 'Privacy',
+    sampleTitle: 'Sample verdict',
+    sampleIntro: 'Here is a real verdict generated for these 3 tools: QuickBooks, Excel (dispatch) and Jobber.',
+    sample: [
+      'What is probably leaking between these three tools is re-entry. A call comes in, you note it in Jobber or on paper, the quote goes out, the work order gets copied into Excel for dispatch, then the invoice goes back into QuickBooks. Every manual copy is a chance for a mistake on the amount, the address or the customer, and for invoices going out late because someone forgot to close the job.',
+      'With what you already have, Jobber handles most field steps: customers, quotes, jobs, invoicing. There is also a QuickBooks sync, but how far it goes depends on your plan; check it with your provider. The simplest move is often to make Jobber your single source of truth and take Excel out of the loop.',
+      'Priority #1: this week, list the three steps where you re-type information (quote to work order, work order to invoice, invoice to accounting) and check which of those copies the Jobber and QuickBooks sync can replace.',
+    ],
+    sampleScore: 4,
     lookTitle: 'What the diagnosis looks at',
     look: [
       { title: 'Double entry', text: 'Where the same information (customer, address, hours, amount) gets typed more than once from one tool to the next.' },
@@ -123,14 +140,6 @@ const content = {
     ],
   },
 }
-function ArrowIcon({ size = 14 }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <line x1="5" y1="12" x2="19" y2="12" />
-      <polyline points="12 5 19 12 12 19" />
-    </svg>
-  )
-}
 
 function Spinner({ size = 16 }) {
   return (
@@ -141,14 +150,6 @@ function Spinner({ size = 16 }) {
   )
 }
 
-function Logo() {
-  return (
-    <div className="flex items-center gap-2.5">
-      <img src={logoImg} alt="CoreNode Systems" width="26" height="26" className="block" />
-      <span className="text-[15px] font-semibold tracking-tight text-white">CoreNode</span>
-    </div>
-  )
-}
 
 function ScoreBars({ score, ariaTemplate }) {
   const clamped = Math.max(0, Math.min(5, Number(score) || 0))
@@ -197,6 +198,8 @@ export default function AuditPage() {
     const outil2 = params.get('outil2')
     const outil3 = params.get('outil3')
     if (outil1 || outil2 || outil3) {
+      // Voulu : préremplir après l'hydratation, à partir de l'adresse de la page.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setForm((prev) => ({
         ...prev,
         outil1: outil1 || prev.outil1,
@@ -246,17 +249,13 @@ export default function AuditPage() {
       setNotice(t.maxAttempts)
       return
     }
-    if (!WEBHOOK_URL) {
-      setStatus('error')
-      return
-    }
-
     lastAttempt.current = now
     attempts.current += 1
     setStatus('loading')
 
     try {
-      const res = await fetch(WEBHOOK_URL, {
+      // Fonction serveur du site (api/audit.js), qui attend le verdict de n8n.
+      const res = await fetch('/api/audit', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -264,6 +263,7 @@ export default function AuditPage() {
           outil2: form.outil2.trim().slice(0, MAX_TOOL_LENGTH),
           outil3: form.outil3.trim().slice(0, MAX_TOOL_LENGTH),
           email: form.email.trim().slice(0, MAX_EMAIL_LENGTH),
+          lang,
         }),
       })
       if (!res.ok) throw new Error('Request failed')
@@ -309,15 +309,15 @@ export default function AuditPage() {
         </div>
 
         <div className="max-w-2xl mx-auto">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-white/5 border border-white/10 rounded-full text-[12px] font-medium text-white/70 mb-8">
-            <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: TEAL }}></span>
+          <p className="inline-flex items-center gap-2 text-[13px] text-white/60 mb-7">
+            <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: TEAL }} aria-hidden="true"></span>
             {t.badge}
-          </div>
+          </p>
 
           <h1 className="text-4xl sm:text-5xl font-semibold leading-[1.08] tracking-tight text-white" style={HEADING_FONT}>
             {t.titleA}
             <br />
-            <span className="text-white/40">{t.titleB}</span>
+            <span className="text-white/60">{t.titleB}</span>
           </h1>
           <p className="mt-6 text-[17px] text-white/60 leading-relaxed max-w-xl">
             {t.subtitle}
@@ -327,7 +327,12 @@ export default function AuditPage() {
             <form onSubmit={handleSubmit} noValidate className="relative mt-12 bg-white/[0.03] border border-white/10 rounded-xl p-6 sm:p-8 space-y-5">
               {status === 'error' && (
                 <div className="rounded-md border border-red-400/30 bg-red-400/10 px-4 py-3 text-[13px] text-red-300">
-                  <p>{t.error}</p>
+                  <p>
+                    {t.error}{' '}
+                    <a href={MAILTO} className="text-white underline underline-offset-2">{EMAIL}</a>
+                    {' · '}
+                    <a href={TEL} className="text-white underline underline-offset-2 tabular-nums">{PHONE}</a>
+                  </p>
                   <button
                     type="button"
                     onClick={() => setStatus('idle')}
@@ -407,15 +412,36 @@ export default function AuditPage() {
                     {t.submitting}
                   </>
                 ) : (
-                  <>
-                    {t.submit}
-                    <ArrowIcon size={14} />
-                  </>
+                  t.submit
                 )}
               </button>
 
-              <p className="text-[12px] text-white/40 leading-relaxed">{t.privacyNote}</p>
+              <p className="text-[12px] text-white/60 leading-relaxed">
+                {t.privacyNote}{' '}
+                <Link to="/confidentialite" className="text-white/80 hover:text-white underline underline-offset-2 transition-colors">
+                  {t.privacyLink}
+                </Link>
+                .
+              </p>
             </form>
+          )}
+
+          {status !== 'done' && (
+            <section className="mt-10 rounded-xl border border-white/10 p-6 sm:p-8" aria-labelledby="exemple-verdict">
+              <h2 id="exemple-verdict" className="text-[11px] font-medium uppercase tracking-[0.12em]" style={{ color: TEAL }}>
+                {t.sampleTitle}
+              </h2>
+              <p className="mt-3 text-[13px] text-white/60">{t.sampleIntro}</p>
+              <div className="mt-5 space-y-3">
+                {t.sample.map((para) => (
+                  <p key={para} className="text-[14px] text-white/75 leading-relaxed">{para}</p>
+                ))}
+              </div>
+              <div className="mt-6 pt-5 border-t border-white/10">
+                <div className="text-[13px] font-medium text-white/70 mb-3">{t.scoreLabel}</div>
+                <ScoreBars score={t.sampleScore} ariaTemplate={t.scoreAria} />
+              </div>
+            </section>
           )}
 
           {status === 'done' && result && (
@@ -449,9 +475,8 @@ export default function AuditPage() {
                   style={{ backgroundColor: TEAL }}
                 >
                   {t.ctaButton}
-                  <ArrowIcon size={14} />
                 </a>
-                <p className="mt-4 text-[13px] text-white/40">{t.ctaReassurance}</p>
+                <p className="mt-4 text-[13px] text-white/60">{t.ctaReassurance}</p>
               </div>
             </div>
           )}
@@ -506,9 +531,18 @@ export default function AuditPage() {
       </main>
 
       <footer className="border-t border-white/10 py-8 px-6 lg:px-8">
-        <div className="max-w-6xl mx-auto flex items-center justify-between text-[13px] text-white/45">
-          <span>{t.rights}</span>
-          <Link to="/" className="hover:text-white transition-colors">corenodesystems.com</Link>
+        <div className="max-w-6xl mx-auto flex flex-col sm:flex-row sm:items-center justify-between gap-4 text-[13px] text-white/60">
+          <div>
+            <p>{t.rights}</p>
+            <nav className="flex flex-wrap gap-x-5 gap-y-2 mt-2">
+              <Link to="/" className="hover:text-white transition-colors">corenodesystems.com</Link>
+              <Link to="/confidentialite" className="hover:text-white transition-colors">{t.privacy}</Link>
+            </nav>
+          </div>
+          <div className="sm:text-right">
+            <a href={TEL} className="block text-white/80 hover:text-white transition-colors tabular-nums">{PHONE}</a>
+            <a href={MAILTO} className="block mt-1 text-white/80 hover:text-white transition-colors">{EMAIL}</a>
+          </div>
         </div>
       </footer>
     </div>

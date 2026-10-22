@@ -1,8 +1,17 @@
 @import "tailwindcss";
 
+/* Jetons de marque. Une seule couleur d'accent : le sarcelle du logo. */
+:root {
+  --ink: #141416;
+  --panel: #1b1b1e;
+  --line: rgba(255, 255, 255, 0.1);
+  --teal: #2a9d8f;
+  --teal-soft: rgba(42, 157, 143, 0.14);
+}
+
 html {
   scroll-behavior: smooth;
-  background: #141416;
+  background: var(--ink);
 }
 
 body {
@@ -10,28 +19,129 @@ body {
   font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: #141416;
+  background: var(--ink);
 }
 
-/* Révélation discrète des sections au scroll */
-[data-reveal] {
+h1,
+h2,
+.font-display {
+  font-family: "Space Grotesk", "Inter", ui-sans-serif, system-ui, sans-serif;
+  letter-spacing: -0.02em;
+}
+
+/* Les ancres du menu ne passent plus sous la barre de navigation fixe. */
+section[id] {
+  scroll-margin-top: 72px;
+}
+
+:focus-visible {
+  outline: 2px solid var(--teal);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* ---------------------------------------------------------------------------
+   Flux de l'accueil : un bon de travail traverse les étapes une seule fois au
+   chargement, puis l'état final reste affiché.
+--------------------------------------------------------------------------- */
+.flow-step {
+  opacity: 0.35;
+  animation: flow-light 0.5s ease-out forwards;
+  animation-delay: calc(0.5s + var(--i) * 0.55s);
+}
+
+.flow-step .flow-dot {
+  background: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 0 0 0 transparent;
+  animation: flow-dot 0.5s ease-out forwards;
+  animation-delay: calc(0.5s + var(--i) * 0.55s);
+}
+
+.flow-rail-fill {
+  transform: scaleY(0);
+  transform-origin: top;
+  animation: flow-rail 2.2s cubic-bezier(0.45, 0, 0.25, 1) 0.5s forwards;
+}
+
+.flow-result {
   opacity: 0;
-  transform: translateY(14px);
-  transition: opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1), transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  animation: flow-light 0.5s ease-out 2.9s forwards;
 }
 
-[data-reveal].reveal-visible {
-  opacity: 1;
-  transform: none;
+@keyframes flow-light {
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes flow-dot {
+  to {
+    background: var(--teal);
+    box-shadow: 0 0 0 5px var(--teal-soft);
+  }
+}
+
+@keyframes flow-rail {
+  to {
+    transform: scaleY(1);
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Bandeau des outils : défilement horizontal continu, pause au survol ou au
+   focus clavier.
+--------------------------------------------------------------------------- */
+.marquee {
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee 48s linear infinite;
+}
+
+.marquee:hover .marquee-track,
+.marquee:focus-within .marquee-track {
+  animation-play-state: paused;
+}
+
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
   }
-  [data-reveal] {
+  .flow-step,
+  .flow-result {
+    animation: none;
     opacity: 1;
+  }
+  .flow-step .flow-dot {
+    animation: none;
+    background: var(--teal);
+  }
+  .flow-rail-fill {
+    animation: none;
     transform: none;
-    transition: none;
+  }
+  /* Sans mouvement : les outils s'affichent en grille statique. */
+  .marquee {
+    mask-image: none;
+    -webkit-mask-image: none;
+  }
+  .marquee-track {
+    animation: none;
+    width: auto;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .marquee-track [data-clone] {
+    display: none;
   }
 }
